@@ -53,7 +53,7 @@ export function PagoFolioView() {
     toast.success(dict.pagoFolio.successToast);
     
     if (typeof window !== "undefined") {
-      localStorage.setItem("DestinoLibre_folio_name", form.name);
+      localStorage.setItem("destinolibre_folio_name", form.name);
     }
 
     setOpen(true);

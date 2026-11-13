@@ -1,4 +1,4 @@
-// Central map of Unsplash placeholder images used across DestinoLibre.
+// Central map of Unsplash placeholder images used across destinolibre.
 // Every visual references a key from this map so images can be swapped in one place.
 
 const u = (id: string, w = 1400) =>

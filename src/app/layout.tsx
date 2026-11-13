@@ -25,26 +25,25 @@ const martian = Martian_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://
-    .com.mx"),
+  metadataBase: new URL("https://destinolibre.mx"),
   title: {
-    default: "DestinoLibre · Viajes y experiencias por México, con criterio",
+    default: "DestinoLibre · Travesías de autor y curaduría de viajes en México",
     template: "%s · DestinoLibre",
   },
   description:
-    "Viajes y experiencias por México, seleccionados y producidos con criterio: Pueblos Mágicos, naturaleza, playa, cultura y circuitos. Para quienes viajan con intención.",
+    "Un taller editorial dedicado al arte de viajar por México. Filtramos, diseñamos y operamos rutas de autor: Pueblos Mágicos, naturaleza, costa, gastronomía y expediciones a la medida.",
   openGraph: {
-    title: "DestinoLibre · Viajes diseñados con criterio",
+    title: "DestinoLibre · Travesías diseñadas con intención y criterio",
     description:
-      "Curaduría de viajes por México. Seleccionamos, editamos y producimos cada experiencia.",
-    url: "https://DestinoLibre.com.mx",
+      "Curaduría y producción de viajes por México. Elegimos, pulimos y articulamos cada itinerario para mentes inquisitivas.",
+    url: "https://destinolibre.mx",
     siteName: "DestinoLibre",
     locale: "es_MX",
     type: "website",
   },
-  icons: {
-    icon: "/icon.svg",
-  },
+  // icons: {
+  //   icon: "/icon.svg",
+  // },
 };
 
 export default function RootLayout({

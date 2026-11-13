@@ -59,7 +59,7 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
           <!-- Header -->
           <tr>
             <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">destinolibre</h1>
               <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 ${isEn ? "BOARDING PASS & CONFIRMATION" : "PASE DE ABORDAJE Y CONFIRMACIÓN"}
               </p>
@@ -201,7 +201,7 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
           <!-- Header -->
           <tr>
             <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">destinolibre</h1>
               <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 NUEVO MENSAJE DE CONTACTO
               </p>
@@ -272,7 +272,7 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
           <!-- Header -->
           <tr>
             <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">destinolibre</h1>
               <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 ${isEn ? "CONCIERGE DESK" : "CONCIERGE PERSONAL"}
               </p>

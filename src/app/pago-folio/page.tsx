@@ -3,7 +3,7 @@ import { PagoFolioView } from "@/components/folio/PagoFolioView";
 
 export const metadata: Metadata = {
   title: "Pago de Folio a la Medida",
-  description: "Paga tu experiencia diseñada a la medida con DestinoLibre.",
+  description: "Paga tu experiencia diseñada a la medida con destinolibre.",
 };
 
 export default function PagoFolioPage() {

@@ -1,4 +1,4 @@
-# DestinoLibre (destinolibre.mx) — clone of traviora.mx, rebranded
+# destinolibre (destinolibre.mx) — clone of traviora.mx, rebranded
 
 ## Brand
 - Palette: rosa mexicano #E6007E, vino #22081A, blush #FFF4F7, lima #D4FF3F

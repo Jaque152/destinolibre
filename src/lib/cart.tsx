@@ -54,8 +54,8 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const STORAGE_KEY = "DestinoLibre.cart.v1";
-const COUPON_KEY = "DestinoLibre.coupon.v1";
+const STORAGE_KEY = "destinolibre.cart.v1";
+const COUPON_KEY = "destinolibre.coupon.v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -182,7 +182,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             short: i.customName || "Folio",
             category: "Circuitos", // Fallback válido
             price: i.customPrice || 0,
-            region: "DestinoLibre",
+            region: "destinolibre",
             duration: "Variable",
             departure: "A la medida",
             minPeople: 1,

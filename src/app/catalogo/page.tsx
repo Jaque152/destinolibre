@@ -4,7 +4,7 @@ import { CatalogView } from "@/components/catalog/CatalogView";
 export const metadata: Metadata = {
   title: "Catálogo · Índice de viajes",
   description:
-    "El índice editorial de DestinoLibre: estancias, rutas y experiencias diseñadas con criterio en México. Cada viaje, una edición.",
+    "El índice editorial de destinolibre: estancias, rutas y experiencias diseñadas con criterio en México. Cada viaje, una edición.",
 };
 
 export default async function CatalogPage({

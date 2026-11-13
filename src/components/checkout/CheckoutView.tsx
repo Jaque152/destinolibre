@@ -32,7 +32,7 @@ interface FormState {
   cardNumber: string;
   cardName: string;
   cardExp: string;
-  cardCvc: string;
+  cardCVV: string;
   acceptTerms: boolean;
   ciudad: string;
   direccion: string;
@@ -54,7 +54,7 @@ const INITIAL: FormState = {
   cardNumber: "",
   cardName: "",
   cardExp: "",
-  cardCvc: "",
+  cardCVV: "",
   acceptTerms: false,
   ciudad: "",
   direccion: "",
@@ -143,7 +143,7 @@ export function CheckoutView() {
       const now = new Date();
       const expired = year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1);
       if (!mm || !yy || yy.length !== 2 || month < 1 || month > 12 || expired) e.cardExp = dict.checkoutView.errors.cardExp;
-      if (!/^\d{3,4}$/.test(f.cardCvc)) e.cardCvc = dict.checkoutView.errors.cardCvc;
+      if (!/^\d{3,4}$/.test(f.cardCVV)) e.cardCVV = dict.checkoutView.errors.cardCVV;
     }
     if (!f.acceptTerms) e.acceptTerms = dict.checkoutView.errors.acceptTerms;
     return e;
@@ -294,14 +294,16 @@ export function CheckoutView() {
                           className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-mono text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
                         />
                       </Field>
-                      <Field id="cardCvc" label={dict.checkoutView.cardCvc} error={errors.cardCvc}>
+                      <Field id="cardCvv" label={dict.checkoutView.cardCVV} error={errors.cardCVV}>
                         <Input
-                          id="f-cardCvc"
+                          id="f-cardCvv"
+                          type="password"
                           inputMode="numeric"
+                          maxLength={3}
                           autoComplete="cc-csc"
-                          value={form.cardCvc}
-                          onChange={(e) => set("cardCvc", e.target.value.replace(/\D/g, "").slice(0, 4))}
-                          aria-invalid={!!errors.cardCvc}
+                          value={form.cardCVV}
+                          onChange={(e) => set("cardCVV", e.target.value.replace(/\D/g, "").slice(0, 4))}
+                          aria-invalid={!!errors.cardCVV}
                           placeholder="123"
                           className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-mono text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
                         />
@@ -460,11 +462,20 @@ export function CheckoutView() {
             <aside className="lg:col-span-5 xl:col-span-4">
               <div className="lg:sticky lg:top-28">
                 <div className="overflow-hidden rounded-[2.5rem] bg-white border border-slate-200 shadow-xl">
-                  <div className="bg-brand-slate-900 px-8 py-6 text-white">
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] font-bold text-brand-sky">{dict.checkoutView.summaryTitle}</p>
-                    <p className="mt-1 text-sm text-slate-300">
-                      {lines.length} {lines.length === 1 ? dict.cart.experience : dict.cart.experiences}
-                    </p>
+                  <div className="bg-brand-slate-900 px-8 py-6 text-white flex items-center justify-between">
+                    <div>
+                      <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] font-bold text-brand-sky">{dict.checkoutView.summaryTitle}</p>
+                      <p className="mt-1 text-sm text-slate-300">
+                        {lines.length} {lines.length === 1 ? dict.cart.experience : dict.cart.experiences}
+                      </p>
+                    </div>
+                    {/* Logo etomin integrado en la cabecera del resumen */}
+                    <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-1.5">
+                      <span className="text-[10px] font-mono tracking-wider text-slate-300 uppercase">by</span>
+                      <span className="font-bold tracking-tight text-white text-sm" style={{ fontFamily: "sans-serif" }}>
+                        etom<span className="text-brand-orange">í</span>n
+                      </span>
+                    </div>
                   </div>
                   <ul className="max-h-72 divide-y divide-slate-100 overflow-y-auto px-8">
                     {lines.map((l) => (
@@ -501,6 +512,7 @@ export function CheckoutView() {
                       </div>
                       <p className="text-right font-mono text-[0.6rem] uppercase tracking-[0.18em] text-slate-400">{dict.cart.taxIncluded}</p>
                     </dl>
+                    
                     <Button type="submit" size="lg" className="mt-6 w-full h-14 rounded-full bg-brand-orange text-white hover:bg-brand-orange-600 shadow-lg text-base transition-all duration-300 hover:scale-105" disabled={submitting}>
                       {submitting ? (
                         <>
@@ -512,9 +524,17 @@ export function CheckoutView() {
                         </>
                       )}
                     </Button>
-                    <p className="mt-4 text-center text-xs text-slate-500">
-                      {dict.checkoutView.testCardNote}
-                    </p>
+
+                    {/* Insignia de seguridad etomin (Secure Payment) */}
+                    <div className="mt-5 flex items-center justify-between pt-4 border-t border-slate-200 text-xs text-slate-500">
+                      <div className="flex items-center gap-1.5 font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                        <span>SECURE PAYMENT</span>
+                      </div>
+                      <div className="text-right font-mono text-[0.65rem] text-slate-400">
+                        Powered by <strong className="text-slate-700 font-sans">etomín</strong>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -559,14 +579,24 @@ function Block({ n, title, subtitle, children }: { n: string; title: string; sub
   return (
     <fieldset className="rounded-[2.5rem] bg-white p-8 border border-slate-200 shadow-sm md:p-10">
       <legend className="sr-only">{title}</legend>
-      <div className="mb-6 flex items-start gap-4 border-b border-slate-100 pb-6">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-orange font-mono text-sm font-bold text-white shadow-md">
-          {n}
-        </span>
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h2>
-          {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
+      <div className="mb-6 flex items-start justify-between border-b border-slate-100 pb-6">
+        <div className="flex items-start gap-4">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-orange font-mono text-sm font-bold text-white shadow-md">
+            {n}
+          </span>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h2>
+            {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
+          </div>
         </div>
+        {n === "01" && (
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-200">
+            <span className="text-[10px] font-mono uppercase text-slate-400">Pasarela</span>
+            <span className="font-bold tracking-tight text-slate-900 text-xs" style={{ fontFamily: "sans-serif" }}>
+              etom<span className="text-brand-orange">í</span>n
+            </span>
+          </div>
+        )}
       </div>
       {children}
     </fieldset>
@@ -608,11 +638,13 @@ function CardPreview({ number, name, exp, brand }: { number: string; name: strin
         <div className="h-8 w-12 rounded-lg bg-gradient-to-br from-brand-sky to-brand-sky-600 shadow-inner" />
         <span className="font-mono text-xs uppercase tracking-widest font-bold text-brand-sky">{brand ?? "Card"}</span>
       </div>
-      <div className="relative z-10">
-        <p className="font-mono text-xl tracking-[0.15em] text-white">{masked}</p>
-        <div className="mt-4 flex justify-between font-mono text-xs uppercase tracking-widest text-slate-300">
-          <span className="truncate pr-2 font-semibold">{name || "Name Surname"}</span>
-          <span>{exp || "MM/YY"}</span>
+      <div className="relative z-10 flex items-end justify-between">
+        <div>
+          <p className="font-mono text-xl tracking-[0.15em] text-white">{masked}</p>
+          <div className="mt-4 flex justify-between font-mono text-xs uppercase tracking-widest text-slate-300 gap-4">
+            <span className="truncate pr-2 font-semibold">{name || "Name Surname"}</span>
+            <span>{exp || "MM/YY"}</span>
+          </div>
         </div>
       </div>
     </div>
