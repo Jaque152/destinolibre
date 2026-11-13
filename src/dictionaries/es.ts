@@ -50,7 +50,7 @@ export const es = {
     eyebrow: "— Nuestra mirada",
     text1: "México no solo se recorre, se",
     text1Em: "descifra",
-    text2: ". Cada región habla su propio idioma: el matiz de la luz en Oaxaca, la calma de una antigua hacienda en Yucatán o la cocina de un chef que honra su origen.",
+    text2: "Cada región habla su propio idioma: el matiz de la luz en Oaxaca, la calma de una antigua hacienda en Yucatán o la cocina de un chef que honra su origen.",
     text3: "surge para traducir la riqueza de este país en expediciones únicas, guiados siempre por el compromiso de mantener la",
     criterioEm: "excelencia",
   },

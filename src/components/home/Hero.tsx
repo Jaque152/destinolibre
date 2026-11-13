@@ -65,11 +65,15 @@ export function Hero() {
           
           {/* Sello rotatorio superpuesto (Absolute) */}
           <Reveal delay={700} className="absolute -top-16 right-8 z-20 hidden md:block lg:-top-20 lg:right-16">
-            <div className="relative h-32 w-32 animate-spin-slow rounded-full bg-white p-2 shadow-2xl lg:h-40 lg:w-40">
-              <svg viewBox="0 0 100 100" className="h-full w-full fill-current text-brand-slate-900">
-                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-                <text fontSize="11.5" fontWeight="900" letterSpacing="2.5" className="font-mono uppercase">
-                  <textPath href="#circlePath">
+            <div className="relative h-32 w-32 animate-spin-slow rounded-full bg-white p-2 shadow-2xl lg:h-40 lg:w-40 flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible fill-current text-brand-slate-900">
+                <path
+                  id="circlePath"
+                  d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"
+                  fill="none"
+                />
+                <text fontSize="9.5" fontWeight="900" letterSpacing="1.5" className="font-mono uppercase">
+                  <textPath href="#circlePath" startOffset="50%" textAnchor="middle">
                     {lang === "es" ? "DESTINO LIBRE • CURADURÍA • " : "DESTINO LIBRE • CURATION • "}
                   </textPath>
                 </text>
@@ -79,7 +83,6 @@ export function Hero() {
               </div>
             </div>
           </Reveal>
-
           {/* Caja contenedora Grid */}
           <div className="grid items-stretch border border-brand-slate-100 shadow-2xl lg:grid-cols-12">
             
@@ -100,7 +103,7 @@ export function Hero() {
             {/* Imagen Fotográfica (con animación de zoom lento al hover) */}
             <Reveal delay={600} className="group min-h-[400px] overflow-hidden bg-brand-slate-100 lg:col-span-7 lg:h-auto">
               <img 
-                src={IMG.monarch} 
+                src={IMG.teotihuacanBalloons} 
                 alt="Experiencia Destino Libre" 
                 className="h-full w-full object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
               />
