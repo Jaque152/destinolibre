@@ -2,8 +2,8 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy");
 
-const FROM_EMAIL: string = process.env.EMAIL_FROM || "Destinara <atencion@destinara.com.mx>";
-const ADMIN_EMAIL: string = process.env.EMAIL_ADMIN || "atencion@destinara.com.mx";
+const FROM_EMAIL: string = process.env.EMAIL_FROM || "Destino Libre <cuentanos@destinolibre.mx>";
+const ADMIN_EMAIL: string = process.env.EMAIL_ADMIN || "cuentanos@destinolibre.mx";
 
 interface OrderEmailProps {
   orderId: string;
@@ -40,8 +40,8 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
   const isEn = props.lang === "en";
 
   const subject = isEn
-    ? `Booking Confirmed: ${props.orderId} · Destinara`
-    : `Reservación confirmada: ${props.orderId} · Destinara`;
+    ? `Booking Confirmed: ${props.orderId} · Destino Libre`
+    : `Reservación confirmada: ${props.orderId} · Destino Libre`;
 
   const html = `
 <!DOCTYPE html>
@@ -51,16 +51,16 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${subject}</title>
 </head>
-<body style="margin:0; padding:0; background-color:#FDF8F5; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#22081A;">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#FDF8F5; padding:40px 10px;">
+<body style="margin:0; padding:0; background-color:#F8FAFC; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#0F172A;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#F8FAFC; padding:40px 10px;">
     <tr>
       <td align="center">
-        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 10px 30px rgba(34,8,26,0.08);">
+        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; border:1px solid #E2E8F0; box-shadow:0 10px 30px rgba(15,23,42,0.05);">
           <!-- Header -->
           <tr>
-            <td style="background-color:#22081A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FDF8F5; font-size:26px; font-weight:800; letter-spacing:-0.5px;">DESTINARA</h1>
-              <p style="margin:6px 0 0; color:#D4E157; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
+            <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 ${isEn ? "BOARDING PASS & CONFIRMATION" : "PASE DE ABORDAJE Y CONFIRMACIÓN"}
               </p>
             </td>
@@ -69,10 +69,10 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
           <!-- Content -->
           <tr>
             <td style="padding:40px;">
-              <h2 style="margin:0 0 12px; font-size:24px; font-weight:700; color:#22081A;">
+              <h2 style="margin:0 0 12px; font-size:22px; font-weight:700; color:#0F172A;">
                 ${isEn ? `Safe travels, ${props.customerName.split(" ")[0]}!` : `¡Buen viaje, ${props.customerName.split(" ")[0]}!`}
               </h2>
-              <p style="margin:0 0 24px; font-size:15px; line-height:1.6; color:#554450;">
+              <p style="margin:0 0 24px; font-size:15px; line-height:1.6; color:#475569;">
                 ${
                   isEn
                     ? `Your payment has been successfully processed. Here are the details of your confirmed itinerary. Reference Code: <strong>${props.orderId}</strong>.`
@@ -81,18 +81,18 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
               </p>
 
               <!-- Items Table -->
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top:1px solid #F2E8E4; border-bottom:1px solid #F2E8E4; margin-bottom:24px;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0; margin-bottom:24px;">
                 ${props.lines
                   .map(
                     (l) => `
                 <tr>
-                  <td style="padding:16px 0; border-bottom:1px stroke #F8EFEC;">
-                    <strong style="font-size:16px; color:#22081A;">${l.title}</strong><br>
-                    <span style="font-size:12px; color:#887780; font-family:monospace;">
+                  <td style="padding:16px 0; border-bottom:1px solid #F1F5F9;">
+                    <strong style="font-size:15px; color:#0F172A;">${l.title}</strong><br>
+                    <span style="font-size:12px; color:#64748B; font-family:monospace;">
                       ${l.code} · ${l.date} · ${l.adults} ${isEn ? (l.adults === 1 ? "adult" : "adults") : (l.adults === 1 ? "adulto" : "adultos")}
                     </span>
                   </td>
-                  <td align="right" style="padding:16px 0; font-size:16px; font-weight:700; color:#22081A;">
+                  <td align="right" style="padding:16px 0; font-size:15px; font-weight:700; color:#0F172A;">
                     ${l.lineTotalFormatted}
                   </td>
                 </tr>
@@ -104,33 +104,33 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
               <!-- Totals -->
               <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:32px;">
                 <tr>
-                  <td style="font-size:14px; color:#665560;">${isEn ? "Subtotal" : "Subtotal"}</td>
-                  <td align="right" style="font-size:14px; color:#22081A;">${props.subtotalFormatted}</td>
+                  <td style="font-size:14px; color:#64748B;">${isEn ? "Subtotal" : "Subtotal"}</td>
+                  <td align="right" style="font-size:14px; color:#0F172A;">${props.subtotalFormatted}</td>
                 </tr>
                 ${
                   props.discountFormatted
                     ? `
                 <tr>
-                  <td style="font-size:14px; color:#E6007E;">${isEn ? "Discount" : "Descuento"}</td>
-                  <td align="right" style="font-size:14px; color:#E6007E;">-${props.discountFormatted}</td>
+                  <td style="font-size:14px; color:#F97316;">${isEn ? "Discount" : "Descuento"}</td>
+                  <td align="right" style="font-size:14px; color:#F97316;">-${props.discountFormatted}</td>
                 </tr>
                 `
                     : ""
                 }
                 <tr>
-                  <td style="font-size:18px; font-weight:800; color:#22081A; padding-top:12px;">${isEn ? "Total Paid" : "Total Pagado"}</td>
-                  <td align="right" style="font-size:22px; font-weight:800; color:#E6007E; padding-top:12px;">${props.totalFormatted}</td>
+                  <td style="font-size:16px; font-weight:800; color:#0F172A; padding-top:12px;">${isEn ? "Total Paid" : "Total Pagado"}</td>
+                  <td align="right" style="font-size:20px; font-weight:800; color:#F97316; padding-top:12px;">${props.totalFormatted}</td>
                 </tr>
               </table>
 
               <!-- Banner Concierge -->
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#22081A; border-radius:16px; padding:24px; color:#FDF8F5;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#F1F5F9; border-radius:16px; padding:24px; color:#0F172A; border:1px solid #E2E8F0;">
                 <tr>
                   <td>
-                    <p style="margin:0; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#D4E157; font-family:monospace;">
+                    <p style="margin:0; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#0284C7; font-family:monospace; font-weight:bold;">
                       ${isEn ? "NEXT STEP" : "SIGUIENTE PASO"}
                     </p>
-                    <p style="margin:8px 0 0; font-size:14px; line-height:1.5; color:#FDF8F5;">
+                    <p style="margin:8px 0 0; font-size:14px; line-height:1.5; color:#334155;">
                       ${
                         isEn
                           ? "Your personal concierge will reach out via WhatsApp/email in less than 24 hours to coordinate meeting points and custom preferences."
@@ -145,9 +145,9 @@ export async function sendOrderConfirmationEmail(props: OrderEmailProps) {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#F8EFEC; padding:24px 40px; text-align:center; font-size:12px; color:#776670;">
-              Destinara · Edición y producción de viajes por México<br>
-              Ciudad de México · <a href="https://destinara.mx" style="color:#E6007E; text-decoration:none;">destinara.mx</a>
+            <td style="background-color:#F8FAFC; padding:24px 40px; text-align:center; font-size:12px; color:#64748B; border-top:1px solid #E2E8F0;">
+              Destino Libre · Viajes y experiencias con criterio<br>
+              México · <a href="https://destinolibre.mx" style="color:#F97316; text-decoration:none;">destinolibre.mx</a>
             </td>
           </tr>
         </table>
@@ -179,10 +179,10 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
 
   const isEn = props.lang === "en";
 
-  const adminSubject = `[Nuevo Mensaje] ${props.name} · Destinara`;
+  const adminSubject = `[Nuevo Mensaje] ${props.name} · Destino Libre`;
   const userSubject = isEn
-    ? `We received your inquiry · Destinara`
-    : `Hemos recibido tu mensaje · Destinara`;
+    ? `We received your inquiry · Destino Libre`
+    : `Hemos recibido tu mensaje · Destino Libre`;
 
   // 1. Email estilizado para el administrador / Concierge
   const adminHtml = `
@@ -193,16 +193,16 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${adminSubject}</title>
 </head>
-<body style="margin:0; padding:0; background-color:#FDF8F5; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#22081A;">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#FDF8F5; padding:40px 10px;">
+<body style="margin:0; padding:0; background-color:#F8FAFC; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#0F172A;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#F8FAFC; padding:40px 10px;">
     <tr>
       <td align="center">
-        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 10px 30px rgba(34,8,26,0.08);">
+        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; border:1px solid #E2E8F0; box-shadow:0 10px 30px rgba(15,23,42,0.05);">
           <!-- Header -->
           <tr>
-            <td style="background-color:#22081A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FDF8F5; font-size:26px; font-weight:800; letter-spacing:-0.5px;">DESTINARA</h1>
-              <p style="margin:6px 0 0; color:#D4E157; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
+            <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 NUEVO MENSAJE DE CONTACTO
               </p>
             </td>
@@ -210,41 +210,41 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
           <!-- Content -->
           <tr>
             <td style="padding:40px;">
-              <h2 style="margin:0 0 16px; font-size:20px; font-weight:700; color:#22081A;">Detalles de la consulta</h2>
+              <h2 style="margin:0 0 16px; font-size:18px; font-weight:700; color:#0F172A;">Detalles de la consulta</h2>
               
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top:1px solid #F2E8E4; margin-bottom:24px;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top:1px solid #E2E8F0; margin-bottom:24px;">
                 <tr>
-                  <td style="padding:14px 0; border-bottom:1px solid #F8EFEC; font-size:14px;">
-                    <strong style="color:#22081A;">Nombre:</strong> <span style="color:#554450;">${props.name}</span>
+                  <td style="padding:14px 0; border-bottom:1px solid #F1F5F9; font-size:14px;">
+                    <strong style="color:#0F172A;">Nombre:</strong> <span style="color:#475569;">${props.name}</span>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:14px 0; border-bottom:1px solid #F8EFEC; font-size:14px;">
-                    <strong style="color:#22081A;">Email:</strong> <a href="mailto:${props.email}" style="color:#E6007E; text-decoration:none;">${props.email}</a>
+                  <td style="padding:14px 0; border-bottom:1px solid #F1F5F9; font-size:14px;">
+                    <strong style="color:#0F172A;">Email:</strong> <a href="mailto:${props.email}" style="color:#F97316; text-decoration:none;">${props.email}</a>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:14px 0; border-bottom:1px solid #F8EFEC; font-size:14px;">
-                    <strong style="color:#22081A;">Teléfono:</strong> <span style="color:#554450;">${props.phone || "No proporcionado"}</span>
+                  <td style="padding:14px 0; border-bottom:1px solid #F1F5F9; font-size:14px;">
+                    <strong style="color:#0F172A;">Teléfono:</strong> <span style="color:#475569;">${props.phone || "No proporcionado"}</span>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:14px 0; border-bottom:1px solid #F8EFEC; font-size:14px;">
-                    <strong style="color:#22081A;">Interés:</strong> <span style="color:#554450;">${props.interest}</span>
+                  <td style="padding:14px 0; border-bottom:1px solid #F1F5F9; font-size:14px;">
+                    <strong style="color:#0F172A;">Interés:</strong> <span style="color:#475569;">${props.interest}</span>
                   </td>
                 </tr>
               </table>
 
-              <h3 style="margin:0 0 12px; font-size:16px; font-weight:700; color:#22081A;">Mensaje:</h3>
-              <div style="background-color:#FDF8F5; padding:20px; border-left:4px solid #E6007E; border-radius:4px; font-size:14px; line-height:1.6; color:#554450;">
+              <h3 style="margin:0 0 12px; font-size:15px; font-weight:700; color:#0F172A;">Mensaje:</h3>
+              <div style="background-color:#F8FAFC; padding:20px; border-left:4px solid #F97316; border-radius:4px; font-size:14px; line-height:1.6; color:#475569; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
                 ${props.message.replace(/\n/g, "<br>")}
               </div>
             </td>
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background-color:#F8EFEC; padding:24px 40px; text-align:center; font-size:12px; color:#776670;">
-              Destinara · Área de Concierge
+            <td style="background-color:#F8FAFC; padding:24px 40px; text-align:center; font-size:12px; color:#64748B; border-top:1px solid #E2E8F0;">
+              Destino Libre · Área de Concierge
             </td>
           </tr>
         </table>
@@ -264,16 +264,16 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${userSubject}</title>
 </head>
-<body style="margin:0; padding:0; background-color:#FDF8F5; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#22081A;">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#FDF8F5; padding:40px 10px;">
+<body style="margin:0; padding:0; background-color:#F8FAFC; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#0F172A;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#F8FAFC; padding:40px 10px;">
     <tr>
       <td align="center">
-        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 10px 30px rgba(34,8,26,0.08);">
+        <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; border-radius:24px; overflow:hidden; border:1px solid #E2E8F0; box-shadow:0 10px 30px rgba(15,23,42,0.05);">
           <!-- Header -->
           <tr>
-            <td style="background-color:#22081A; padding:32px 40px; text-align:center;">
-              <h1 style="margin:0; color:#FDF8F5; font-size:26px; font-weight:800; letter-spacing:-0.5px;">DESTINARA</h1>
-              <p style="margin:6px 0 0; color:#D4E157; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
+            <td style="background-color:#0F172A; padding:32px 40px; text-align:center;">
+              <h1 style="margin:0; color:#FFFFFF; font-size:24px; font-weight:800; letter-spacing:-0.5px;">DESTINOLIBRE</h1>
+              <p style="margin:6px 0 0; color:#38BDF8; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-family:monospace;">
                 ${isEn ? "CONCIERGE DESK" : "CONCIERGE PERSONAL"}
               </p>
             </td>
@@ -281,25 +281,25 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
           <!-- Content -->
           <tr>
             <td style="padding:40px;">
-              <h2 style="margin:0 0 16px; font-size:24px; font-weight:700; color:#22081A;">
+              <h2 style="margin:0 0 16px; font-size:22px; font-weight:700; color:#0F172A;">
                 ${isEn ? `Thank you, ${props.name.split(" ")[0]}!` : `¡Gracias, ${props.name.split(" ")[0]}!`}
               </h2>
-              <p style="margin:0 0 32px; font-size:15px; line-height:1.6; color:#554450;">
+              <p style="margin:0 0 32px; font-size:15px; line-height:1.6; color:#475569;">
                 ${
                   isEn
-                    ? `We have received your message regarding <strong>"${props.interest}"</strong>. A Destinara concierge will review your request and get back to you personally.`
-                    : `Hemos recibido tu mensaje acerca de <strong>"${props.interest}"</strong>. Un concierge de Destinara revisará tu solicitud y te escribirá personalmente.`
+                    ? `We have received your message regarding <strong>"${props.interest}"</strong>. A Destino Libre concierge will review your request and get back to you personally.`
+                    : `Hemos recibido tu mensaje acerca de <strong>"${props.interest}"</strong>. Un concierge de Destino Libre revisará tu solicitud y te escribirá personalmente.`
                 }
               </p>
 
               <!-- Banner Concierge -->
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#22081A; border-radius:16px; padding:24px; color:#FDF8F5;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#F1F5F9; border-radius:16px; padding:24px; color:#0F172A; border:1px solid #E2E8F0;">
                 <tr>
                   <td>
-                    <p style="margin:0; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#D4E157; font-family:monospace;">
+                    <p style="margin:0; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#0284C7; font-family:monospace; font-weight:bold;">
                       ${isEn ? "WHAT HAPPENS NEXT?" : "¿QUÉ SIGUE?"}
                     </p>
-                    <p style="margin:8px 0 0; font-size:14px; line-height:1.5; color:#FDF8F5;">
+                    <p style="margin:8px 0 0; font-size:14px; line-height:1.5; color:#334155;">
                       ${
                         isEn
                           ? "Our team is already working on your request. Expect a reply in under 24 hours. If you need immediate assistance, simply reply to this email."
@@ -313,9 +313,9 @@ export async function sendContactNotificationEmail(props: ContactEmailProps) {
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background-color:#F8EFEC; padding:24px 40px; text-align:center; font-size:12px; color:#776670;">
-              Destinara · Edición y producción de viajes por México<br>
-              Ciudad de México · <a href="https://destinara.mx" style="color:#E6007E; text-decoration:none;">destinara.mx</a>
+            <td style="background-color:#F8FAFC; padding:24px 40px; text-align:center; font-size:12px; color:#64748B; border-top:1px solid #E2E8F0;">
+              Destino Libre · Viajes y experiencias con criterio<br>
+              México · <a href="https://destinolibre.mx" style="color:#F97316; text-decoration:none;">destinolibre.mx</a>
             </td>
           </tr>
         </table>

@@ -17,7 +17,7 @@ export const en: Dictionary = {
     openCart: "View Itinerary",
     openMenu: "Toggle Menu",
     menu: "Navigation",
-    menuSubtitle: "Destinara Main Index",
+    menuSubtitle: "DestinoLibre Main Index",
     home: "Home",
   },
   footer: {
@@ -285,7 +285,7 @@ export const en: Dictionary = {
     messagePrefix: "Thank you,",
     messageSuffixPaid: ". We have sent your confirmation and vouchers to",
     messageConcierge: ". Your concierge will reach out within 24 hours.",
-    passHeader: "Boarding Pass · Destinara",
+    passHeader: "Boarding Pass · DestinoLibre",
     statusPaid: "Paid",
     statusPending: "Pending",
     passengerLabel: "Passenger",
@@ -318,14 +318,14 @@ export const en: Dictionary = {
     messagePlaceholder: "Approximate dates, number of travelers, desired activities…",
     privacyPrefix: "I have read the",
     privacyLink: "Privacy Notice",
-    privacySuffix: "and agree to let Destinara contact me.",
+    privacySuffix: "and agree to let DestinoLibre contact me.",
     confidentialityNote: "Your data is confidential. We do not share information with third parties.",
     sending: "Sending…",
     sendBtn: "Send message",
     receivedTitle: "Message",
     receivedTitleEm: "received",
     receivedMessagePrefix: "Thank you,",
-    receivedMessageMiddle: ". A Destinara concierge will respond to",
+    receivedMessageMiddle: ". A DestinoLibre concierge will respond to",
     receivedMessageSuffix: "in under 24 hours.",
     sendAnother: "Send another message",
     errors: {
@@ -359,7 +359,26 @@ export const en: Dictionary = {
     durationLabel: "Duration",
     departureLabel: "Departure",
   },
-  // Agregar al objeto en:
+  pagoFolio: {
+    eyebrow: "Secure Payment",
+    title: "Bespoke",
+    titleEm: "folio",
+    description: "Enter the details provided by your concierge to add your custom experience to the cart and proceed with checkout.",
+    nameLabel: "Full Name",
+    namePlaceholder: "Reservation name",
+    folioLabel: "Folio Number",
+    folioPlaceholder: "E.g. DST-1234",
+    priceLabel: "Amount to pay (MXN)",
+    pricePlaceholder: "E.g. 15000",
+    addBtn: "Add to cart",
+    processing: "Adding...",
+    successToast: "Folio added to your itinerary",
+    errors: {
+      name: "Enter a valid name.",
+      folio: "Folio number is required.",
+      price: "Enter a valid amount greater than 0.",
+    }
+  },
   contactPage: {
     heroEyebrow: "Let's Talk",
     heroTitle: "An extraordinary journey",
@@ -390,6 +409,7 @@ export const en: Dictionary = {
     ctaTitleEm: "catalog",
     ctaDesc: "Our curated selection of signature routes — sunrise balloon flights, mystical cenotes, culinary journeys, and comprehensive country tours.",
     ctaBtn: "Explore full catalog",
+    folioBtn: "Pay a bespoke folio",
   },
   experiencePage: {
     notFound: "Experience not found",
@@ -414,7 +434,7 @@ export const en: Dictionary = {
     startTrip: "Start Journey",
   },
   legalPage: {
-    sidebarEyebrow: "Legal · Destinara",
+    sidebarEyebrow: "Legal · DestinoLibre",
     lastUpdated: "Last updated: November 2026",
     notFound: "Document not found",
     docs: {
@@ -422,7 +442,7 @@ export const en: Dictionary = {
         title: "Privacy",
         em: "Notice",
         navLabel: "Privacy Notice",
-        intro: "Destinara, based in Mexico City, is responsible for the use and protection of your personal data in accordance with local data privacy laws.",
+        intro: "DestinoLibre, based in Mexico City, is responsible for the use and protection of your personal data in accordance with local data privacy laws.",
         sections: [
           { h: "Data we collect", p: "Name, email address, phone number, billing information, and travel preferences provided when booking or contacting us. We do not store full credit card details." },
           { h: "Purposes", p: "To manage your bookings, issue tax invoices, provide personalized support, and with your consent, send travel proposals." },
@@ -434,12 +454,12 @@ export const en: Dictionary = {
         title: "Terms &",
         em: "Conditions",
         navLabel: "Terms & Conditions",
-        intro: "By booking an experience with Destinara, you accept the following general terms and conditions.",
+        intro: "By booking an experience with DestinoLibre, you accept the following general terms and conditions.",
         sections: [
           { h: "Bookings", p: "Every reservation is confirmed upon receipt of full payment or deposit. You will receive a confirmation email with your reference code." },
           { h: "Pricing", p: "Prices are quoted in Mexican Pesos (MXN), include VAT, and are per person unless specified otherwise." },
           { h: "Operations", p: "Some experiences require a minimum number of participants. If not reached, we will offer a new date or a full refund." },
-          { h: "Liability", p: "Destinara acts as an intermediary between travelers and service providers, ensuring strict standards of quality." },
+          { h: "Liability", p: "DestinoLibre acts as an intermediary between travelers and service providers, ensuring strict standards of quality." },
         ],
       },
       reembolsos: {

@@ -15,7 +15,7 @@ export const es = {
     openCart: "Ver itinerario",
     openMenu: "Desplegar menú",
     menu: "Navegación",
-    menuSubtitle: "Índice principal de Destinara",
+    menuSubtitle: "Índice principal de DestinoLibre",
     home: "Inicio",
   },
   footer: {
@@ -275,6 +275,26 @@ export const es = {
       country: "Escribe tu país de residencia.",
     },
   },
+  pagoFolio: {
+    eyebrow: "Pago Seguro",
+    title: "Folio a la",
+    titleEm: "medida",
+    description: "Ingresa los datos proporcionados por tu concierge para añadir tu experiencia personalizada al carrito y proceder con el pago.",
+    nameLabel: "Nombre completo",
+    namePlaceholder: "Nombre de quien reserva",
+    folioLabel: "Número de Folio",
+    folioPlaceholder: "Ej. DST-1234",
+    priceLabel: "Monto a pagar (MXN)",
+    pricePlaceholder: "Ej. 15000",
+    addBtn: "Añadir al carrito",
+    processing: "Añadiendo...",
+    successToast: "Folio añadido a tu itinerario",
+    errors: {
+      name: "Ingresa un nombre válido.",
+      folio: "El folio es requerido.",
+      price: "Ingresa un monto válido mayor a 0.",
+    }
+  },
   confirmationView: {
     paidTitle: "Pago confirmado",
     pendingTitle: "Reservación registrada",
@@ -283,7 +303,7 @@ export const es = {
     messagePrefix: "Gracias,",
     messageSuffixPaid: ". Enviamos tu confirmación y vouchers a",
     messageConcierge: ". Tu concierge te escribirá en menos de 24 horas.",
-    passHeader: "Pase de abordar · Destinara",
+    passHeader: "Pase de abordar · DestinoLibre",
     statusPaid: "Pagado",
     statusPending: "Pendiente",
     passengerLabel: "Pasajero",
@@ -316,14 +336,14 @@ export const es = {
     messagePlaceholder: "Fechas aproximadas, número de viajeros, qué te gustaría vivir…",
     privacyPrefix: "He leído el",
     privacyLink: "Aviso de Privacidad",
-    privacySuffix: "y acepto que Destinara me contacte.",
+    privacySuffix: "y acepto que DestinoLibre me contacte.",
     confidentialityNote: "Tu información es confidencial. No compartimos tus datos con terceros.",
     sending: "Enviando…",
     sendBtn: "Enviar mensaje",
     receivedTitle: "Mensaje",
     receivedTitleEm: "recibido",
     receivedMessagePrefix: "Gracias,",
-    receivedMessageMiddle: ". Un concierge de Destinara te escribirá a",
+    receivedMessageMiddle: ". Un concierge de DestinoLibre te escribirá a",
     receivedMessageSuffix: "en menos de 24 horas.",
     sendAnother: "Enviar otro mensaje",
     errors: {
@@ -387,6 +407,7 @@ export const es = {
     ctaTitleEm: "experiencias",
     ctaDesc: "Explora nuestra colección de rutas seleccionadas — sobrevuelos al amanecer, cenotes ocultos, inmersiones culinarias y expediciones por todo México.",
     ctaBtn: "Explorar todo el catálogo",
+    folioBtn: "Pagar un folio a la medida",
   },
   experiencePage: {
     notFound: "Experiencia no encontrada",
@@ -411,7 +432,7 @@ export const es = {
     startTrip: "Iniciar viaje",
   },
   legalPage: {
-    sidebarEyebrow: "Legal · Destinara",
+    sidebarEyebrow: "Legal · DestinoLibre",
     lastUpdated: "Última actualización: noviembre 2026",
     notFound: "Documento no encontrado",
     docs: {
@@ -419,7 +440,7 @@ export const es = {
         title: "Aviso de",
         em: "Privacidad",
         navLabel: "Aviso de Privacidad",
-        intro: "Destinara, con domicilio en Ciudad de México, es responsable del uso y protección de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.",
+        intro: "DestinoLibre, con domicilio en Ciudad de México, es responsable del uso y protección de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.",
         sections: [
           { h: "Datos que recabamos", p: "Nombre, correo electrónico, teléfono, datos de facturación y preferencias de viaje que nos proporcionas al reservar o contactarnos. No almacenamos los datos completos de tu tarjeta." },
           { h: "Finalidades", p: "Gestionar tus reservaciones, emitir comprobantes fiscales, brindarte atención personalizada y, con tu consentimiento, enviarte propuestas de viaje." },
@@ -431,12 +452,12 @@ export const es = {
         title: "Términos y",
         em: "Condiciones",
         navLabel: "Términos y Condiciones",
-        intro: "Al reservar una experiencia con Destinara aceptas las siguientes condiciones generales de contratación.",
+        intro: "Al reservar una experiencia con DestinoLibre aceptas las siguientes condiciones generales de contratación.",
         sections: [
           { h: "Reservaciones", p: "Toda reservación queda confirmada al recibir el pago total o el anticipo indicado. Recibirás un correo de confirmación con tu folio." },
           { h: "Precios", p: "Los precios se expresan en pesos mexicanos (MXN), incluyen IVA y son por persona salvo que se indique lo contrario." },
           { h: "Operación", p: "Algunas experiencias requieren un mínimo de participantes. Si no se alcanza, te ofreceremos una nueva fecha o el reembolso total." },
-          { h: "Responsabilidad", p: "Destinara actúa como intermediario entre el viajero y los prestadores de servicios, y vela por la calidad de cada experiencia." },
+          { h: "Responsabilidad", p: "DestinoLibre actúa como intermediario entre el viajero y los prestadores de servicios, y vela por la calidad de cada experiencia." },
         ],
       },
       reembolsos: {

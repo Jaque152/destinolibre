@@ -1,148 +1,115 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { ArrowUpRight, Plane } from "lucide-react";
-import { FlapText } from "@/components/site/FlapText";
+import { ArrowRight, Compass } from "lucide-react";
 import { IMG } from "@/lib/images";
 import { useLanguage } from "@/context/LanguageContext";
+import { Reveal } from "@/components/site/Reveal";
 
 export function Hero() {
-  const [i, setI] = useState(0);
   const { lang, dict } = useLanguage();
 
-  const DEPARTURES = [
-    { code: "OAX", city: lang === "es" ? "OAXACA" : "OAXACA", time: "07:40", gate: "A3", statusKey: "boarding" },
-    { code: "SMA", city: lang === "es" ? "SAN MIGUEL" : "SAN MIGUEL", time: "08:15", gate: "B1", statusKey: "onTime" },
-    { code: "MID", city: lang === "es" ? "MERIDA" : "MERIDA", time: "09:05", gate: "C4", statusKey: "onTime" },
-    { code: "TQL", city: lang === "es" ? "TEQUILA" : "TEQUILA", time: "10:30", gate: "A7", statusKey: "lastCall" },
-    { code: "SLP", city: lang === "es" ? "HUASTECA" : "HUASTECA", time: "11:20", gate: "D2", statusKey: "boarding" },
-    { code: "TUL", city: lang === "es" ? "TULUM" : "TULUM", time: "12:45", gate: "B6", statusKey: "onTime" },
-  ];
-
-  useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % DEPARTURES.length), 4200);
-    return () => clearInterval(t);
-  }, [DEPARTURES.length]);
-
-  const d = DEPARTURES[i];
-
-  const getStatusText = (key: string) => {
-    if (key === "lastCall") return dict.board.statusLastCall.toUpperCase();
-    if (key === "boarding") return dict.board.statusBoarding.toUpperCase();
-    return dict.board.statusOnTime.toUpperCase();
-  };
-
   return (
-    <section className="relative overflow-hidden bg-blush pt-28 sm:pt-32">
-      <div className="pointer-events-none absolute -left-40 top-40 h-[30rem] w-[30rem] rounded-full bg-rosa-100/70 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_70%_40%,rgba(230,0,126,0.08),transparent_60%)]" />
+    <section className="relative overflow-hidden bg-white pb-20 pt-32 border-b border-brand-slate-100 lg:pt-40">
+      
+      {/* Geometría sutil de fondo para romper la monotonía del blanco */}
+      <div className="pointer-events-none absolute right-0 top-0 -z-10 h-full w-1/3 -translate-y-10 translate-x-1/3 -skew-x-12 transform bg-slate-50/60" />
 
-      <div className="container relative grid items-end gap-12 pb-14 lg:grid-cols-12 lg:gap-6 lg:pb-20">
-        <div className="relative z-10 lg:col-span-7">
-          <p className="eyebrow flex animate-rise items-center gap-2 text-vino/70">
-            <span className="h-2 w-2 rounded-full bg-rosa" />
-            {dict.hero.eyebrow}
-          </p>
-          <h1 className="mt-6 text-[clamp(3.6rem,10.5vw,10rem)] font-extrabold leading-[0.84] tracking-[-0.055em] text-vino">
-            <span className="block animate-rise [animation-delay:80ms]">{dict.hero.title1}</span>
-            <span className="block animate-rise [animation-delay:160ms]">{dict.hero.title2}</span>
-            <span className="block animate-rise [animation-delay:240ms]">
-              {dict.hero.title3} <em className="pr-2 font-normal tracking-[-0.03em] text-rosa">{dict.hero.criterio}</em>
-            </span>
-          </h1>
+      <div className="container mx-auto px-6">
+        
+        {/* Fila 1: Etiqueta Superior con línea animada */}
+        <Reveal>
+          <div className="mb-12 flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-brand-orange">
+            <span className="h-px w-12 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite] bg-brand-orange" />
+            {dict.hero.eyebrow || "Experiencias de Autor · México"}
+          </div>
+        </Reveal>
 
-          <div className="mt-10 grid animate-rise gap-8 [animation-delay:380ms] sm:grid-cols-[1fr_auto] sm:items-end">
-            <p className="max-w-md text-lg leading-relaxed text-vino/75">
-              {dict.hero.description}
-            </p>
+        {/* Fila 2: Tipografía Gigante Escalonada + Descripción */}
+        <div className="mb-20 grid items-end gap-12 lg:mb-28 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-8">
+            <h1 className="pb-4 text-[clamp(3.5rem,7.5vw,8.5rem)] font-black leading-[0.95] tracking-tighter text-brand-slate-900">
+              <Reveal delay={100}><span className="block">{dict.hero.title1}</span></Reveal>
+              <Reveal delay={200}><span className="block">{dict.hero.title2}</span></Reveal>
+              <Reveal delay={300}>
+                <span className="block text-brand-orange">
+                  {/* Se elimina el punto final manual porque la variable ya lo incluye */}
+                  {dict.hero.title3} {dict.hero.criterio}
+                </span>
+              </Reveal>
+            </h1>
           </div>
-        </div>
 
-        <div className="relative mx-auto h-[30rem] w-full max-w-md sm:h-[36rem] lg:col-span-5 lg:mx-0 lg:ml-auto lg:h-[40rem]">
-          <div className="absolute left-1/2 top-[8%] aspect-square w-[78%] -translate-x-1/2 overflow-hidden">
-            <div className="h-full w-full animate-sun-rise rounded-full bg-rosa" />
-          </div>
-          <div className="arch absolute bottom-0 left-1/2 h-[86%] w-[72%] -translate-x-1/2 overflow-hidden border-[6px] border-blush bg-rosa-100 shadow-[0_40px_80px_-30px_rgba(34,8,26,0.55)]">
-            
-            <img src={IMG.monarch} alt="Arquitectura mexicana" className="h-full w-full object-cover" />
-          </div>
-          <div className="arch absolute -left-2 bottom-6 h-44 w-32 overflow-hidden border-[5px] border-blush shadow-xl sm:h-56 sm:w-40 lg:-left-10">
-            
-            <img src={IMG.yucatanCenote} alt="Cenote en Yucatán" className="h-full w-full object-cover" />
-          </div>
-          <div className="absolute -right-2 top-[4%] h-32 w-32 sm:h-36 sm:w-36 lg:-right-6">
-            <div className="absolute inset-0 rounded-full bg-lima" />
-            <svg viewBox="0 0 200 200" className="absolute inset-0 animate-spin-slow text-vino" aria-hidden="true">
-              <defs>
-                <path id="stampCircle" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0" />
-              </defs>
-              <text className="fill-current font-mono" fontSize="14.5" letterSpacing="3.6">
-                <textPath href="#stampCircle">
-                  {lang === "es" ? "DESTINARA · CURADURÍA DE VIAJES · MX · " : "DESTINARA · TRAVEL CURATION · MX · "}
-                </textPath>
-              </text>
-            </svg>
-            <svg viewBox="0 0 24 24" className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 text-rosa" aria-hidden="true">
-              <path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9-7.9-2.6 7.9-2.6z" fill="currentColor" />
-            </svg>
-          </div>
-          <div className="absolute -right-1 bottom-16 hidden rounded-2xl bg-vino px-4 py-3 text-blush shadow-2xl sm:block lg:-right-8">
-            <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-lima">
-              {lang === "es" ? "Pase · DST" : "Pass · DST"}
-            </p>
-            <p className="mt-1 flex items-center gap-2 text-lg font-bold tracking-tight">
-              CDMX <Plane className="h-4 w-4 text-rosa" /> {d.code}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative bg-vino text-blush">
-        <div className="container flex flex-col gap-4 py-5 md:flex-row md:items-center md:gap-8">
-          <p className="eyebrow flex shrink-0 items-center gap-2 text-lima">
-            <span className="h-2 w-2 animate-blink rounded-full bg-lima" />
-            {dict.hero.nextDepartures}
-          </p>
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm sm:text-base">
-            <Field label={dict.hero.time}>
-              <FlapText text={d.time} length={5} />
-            </Field>
-            <Field label={dict.hero.destination}>
-              <FlapText text={d.city} length={10} />
-            </Field>
-            <Field label={dict.hero.gate} className="hidden sm:flex">
-              <FlapText text={d.gate} length={2} />
-            </Field>
-            <Field label={dict.hero.status}>
-              <span
-                className={
-                  d.statusKey === "lastCall"
-                    ? "font-mono text-xs font-semibold tracking-widest text-rosa"
-                    : "font-mono text-xs font-semibold tracking-widest text-lima"
-                }
+          <div className="pb-4 lg:col-span-4">
+            <Reveal delay={400} className="flex flex-col items-start gap-8">
+              <p className="relative text-lg font-medium leading-relaxed text-brand-slate-600 md:text-xl">
+                <span className="absolute -left-4 -top-4 font-serif text-4xl text-brand-slate-100">"</span>
+                <span className="relative z-10">
+                  {dict.hero.description || "Operamos como un taller de creación de viajes: elegimos, pulimos y producimos cada itinerario desde una visión crítica. Diseñado para mentes inquisitivas."}
+                </span>
+              </p>
+              
+              {/* Botón con efecto sombra sólida (Brutalismo moderno) */}
+              <Link
+                href="/catalogo"
+                className="group inline-flex items-center gap-4 bg-brand-slate-900 px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_#F97316] transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:bg-brand-orange hover:shadow-none"
               >
-                {getStatusText(d.statusKey)}
-              </span>
-            </Field>
+                Explorar Catálogo <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Reveal>
           </div>
-          <Link
-            href="/catalogo"
-            className="font-mono text-xs uppercase tracking-[0.16em] text-blush/70 underline decoration-rosa underline-offset-4 hover:text-lima md:ml-auto"
-          >
-            {dict.hero.viewAll}
-          </Link>
         </div>
+
+        {/* Fila 3: Manifiesto e Imagen con Sello Rotatorio */}
+        <div className="relative">
+          
+          {/* Sello rotatorio superpuesto (Absolute) */}
+          <Reveal delay={700} className="absolute -top-16 right-8 z-20 hidden md:block lg:-top-20 lg:right-16">
+            <div className="relative h-32 w-32 animate-spin-slow rounded-full bg-white p-2 shadow-2xl lg:h-40 lg:w-40">
+              <svg viewBox="0 0 100 100" className="h-full w-full fill-current text-brand-slate-900">
+                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
+                <text fontSize="11.5" fontWeight="900" letterSpacing="2.5" className="font-mono uppercase">
+                  <textPath href="#circlePath">
+                    {lang === "es" ? "DESTINO LIBRE • CURADURÍA • " : "DESTINO LIBRE • CURATION • "}
+                  </textPath>
+                </text>
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Compass className="h-8 w-8 text-brand-orange" strokeWidth={1.5} />
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Caja contenedora Grid */}
+          <div className="grid items-stretch border border-brand-slate-100 shadow-2xl lg:grid-cols-12">
+            
+            {/* Caja de Texto (Manifiesto) */}
+            <Reveal delay={500} className="relative flex flex-col justify-center overflow-hidden border-b border-brand-slate-100 bg-slate-50 p-10 lg:col-span-5 lg:border-b-0 lg:border-r lg:p-16">
+              <div className="pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full border border-brand-slate-200 opacity-50" />
+              <h2 className="relative z-10 text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.4] tracking-tight text-brand-slate-900">
+                {dict.look.text1 || "México no solo se visita, se"}{" "}
+                <span className="font-bold text-brand-sky">{dict.look.text1Em || "interpreta"}</span>.
+                <br /><br />
+                {dict.look.text2 || "Cada paraje posee su propio lenguaje:"} el destello de luz sobre Oaxaca, la serenidad de una vieja finca en Yucatán o la propuesta de un chef que rinde tributo a sus raíces.{" "}
+                <span className="mt-2 inline-block border-b-2 border-brand-orange pb-0.5 font-black text-brand-slate-900">Destino Libre</span>{" "}
+                {dict.look.text3 || "nace para interpretar este vasto territorio y transformarlo en travesías memorables, con el compromiso absoluto de guardar"}{" "}
+                <span className="font-bold text-brand-slate-900">{dict.look.criterioEm || "excelencia"}</span>.
+              </h2>
+            </Reveal>
+
+            {/* Imagen Fotográfica (con animación de zoom lento al hover) */}
+            <Reveal delay={600} className="group min-h-[400px] overflow-hidden bg-brand-slate-100 lg:col-span-7 lg:h-auto">
+              <img 
+                src={IMG.monarch} 
+                alt="Experiencia Destino Libre" 
+                className="h-full w-full object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
+              />
+            </Reveal>
+
+          </div>
+        </div>
+        
       </div>
     </section>
-  );
-}
-
-function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`flex items-center gap-3 ${className ?? ""}`}>
-      <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-blush/40">{label}</span>
-      {children}
-    </div>
   );
 }

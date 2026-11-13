@@ -25,19 +25,20 @@ const martian = Martian_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://destinara.com.mx"),
+  metadataBase: new URL("https://
+    .com.mx"),
   title: {
-    default: "Destinara · Viajes y experiencias por México, con criterio",
-    template: "%s · Destinara",
+    default: "DestinoLibre · Viajes y experiencias por México, con criterio",
+    template: "%s · DestinoLibre",
   },
   description:
     "Viajes y experiencias por México, seleccionados y producidos con criterio: Pueblos Mágicos, naturaleza, playa, cultura y circuitos. Para quienes viajan con intención.",
   openGraph: {
-    title: "Destinara · Viajes diseñados con criterio",
+    title: "DestinoLibre · Viajes diseñados con criterio",
     description:
       "Curaduría de viajes por México. Seleccionamos, editamos y producimos cada experiencia.",
-    url: "https://destinara.com.mx",
-    siteName: "Destinara",
+    url: "https://DestinoLibre.com.mx",
+    siteName: "DestinoLibre",
     locale: "es_MX",
     type: "website",
   },

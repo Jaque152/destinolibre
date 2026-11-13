@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Check, ChevronRight, Clock, Info, Lightbulb, MapPin, X } from "lucide-react";
+import { ArrowRight, Check, ChevronRight, X } from "lucide-react";
 import { BookingWidget } from "@/components/product/BookingWidget";
 import { TicketCard } from "@/components/site/TicketCard";
 import { Reveal } from "@/components/site/Reveal";
@@ -11,117 +11,119 @@ import { useLanguage } from "@/context/LanguageContext";
 export function ExperienceView({ product: rawProduct, related }: { product: Product; related: Product[] }) {
   const { lang, dict } = useLanguage();
   const product = getLocalizedProduct(rawProduct, lang);
-  const categoryLabel = dict.catalogView.categories[product.category] || product.category;
-
-  const hasWhyOrSpecial = product.why || product.special;
-  const hasIncludesOrExcludes = (product.includes && product.includes.length > 0) || (product.excludes && product.excludes.length > 0);
-  const hasInfoOrTips = (product.info && product.info.length > 0) || product.tips;
 
   return (
-    <>
-      {/* Header */}
-      <section className="container pt-28 sm:pt-32">
-        <nav aria-label="Ruta" className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-vino/55">
-          <Link href="/catalogo" className="hover:text-rosa">
-            {dict.header.catalog}
-          </Link>
+    <div className="bg-white">
+      {/* 1. Encabezado Editorial (Protegido del menú fijo con pt-32) */}
+      <section className="container mx-auto px-6 pt-32 lg:pt-40 pb-12">
+        <nav className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-slate-400 mb-8">
+          <Link href="/catalogo" className="hover:text-brand-orange transition-colors">Catálogo</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link href={`/catalogo?categoria=${encodeURIComponent(product.category)}`} className="hover:text-rosa">
-            {categoryLabel}
-          </Link>
+          <span className="text-brand-slate-900">{product.category}</span>
         </nav>
-
-        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-8">
-            <div className="flex animate-rise flex-wrap items-center gap-2">
-              <span className="rounded-full bg-rosa px-3 py-1.5 text-xs font-semibold text-blush">{categoryLabel}</span>
-              <span className="rounded-md bg-vino px-2 py-1 font-mono text-[0.6rem] tracking-widest text-lima">{product.code}</span>
-            </div>
-            <h1 className="mt-5 animate-rise text-balance text-[clamp(2.3rem,5.2vw,4.6rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-vino [animation-delay:80ms]">
-              {product.title}
-            </h1>
-          </div>
-          <div className="animate-rise lg:col-span-4 [animation-delay:160ms]">
-            <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-vino/55">{dict.experiencePage.fromPerAdult}</p>
-            <p className="mt-1 text-4xl font-extrabold tracking-tight text-vino">{formatMXN(product.price)}</p>
-            <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-vino/55">
-              {dict.experiencePage.taxIncluded}
-            </p>
-          </div>
-        </div>
-
-        <div className="relative mt-10 h-[52vh] min-h-[22rem] animate-rise overflow-hidden rounded-[2.5rem] [animation-delay:240ms] md:h-[64vh]">
-          <img src={product.image} alt={product.short} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-vino/70 via-vino/10 to-transparent" />
-          <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-2 sm:inset-x-6 sm:bottom-6">
-            <Pill icon={<MapPin className="h-3.5 w-3.5" />}>{product.region}</Pill>
-            <Pill icon={<Clock className="h-3.5 w-3.5" />}>{product.duration}</Pill>
-            <Pill>{product.departure}</Pill>
+        
+        <div className="max-w-5xl">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-brand-slate-900 leading-[0.95]">
+            {product.title}
+          </h1>
+          <div className="mt-8 flex flex-wrap items-center gap-4 text-xs font-bold tracking-widest uppercase text-brand-slate-500">
+            <span className="bg-brand-orange text-white px-3 py-1.5">{product.code}</span>
+            <span className="text-brand-slate-900">{product.region}</span>
+            <span className="text-brand-slate-300">•</span>
+            <span>{product.duration}</span>
           </div>
         </div>
       </section>
 
-      {/* Body */}
-      <section className="container grid gap-14 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-        <div className="space-y-16 lg:col-span-7 xl:col-span-8">
+      {/* 2. Imagen Principal (Limpia, sin texto superpuesto) */}
+      <section className="container mx-auto px-6 mb-16 lg:mb-24">
+        <Reveal>
+          <div className="relative aspect-[4/3] md:aspect-video lg:aspect-[21/9] w-full bg-brand-slate-100 overflow-hidden border border-brand-slate-100 shadow-lg">
+            <img 
+              src={product.image} 
+              alt={product.title} 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+        </Reveal>
+      </section>
+
+      {/* 3. Contenido Principal y Sidebar */}
+      <section className="container mx-auto px-6 pb-24 grid lg:grid-cols-[1fr_400px] gap-16 lg:gap-24">
+        <div className="space-y-16">
+          
+          {/* Descripción */}
           <Reveal>
-            <p className="eyebrow text-rosa">{dict.experiencePage.eyebrow}</p>
-            <div className="mt-5 space-y-4 text-[clamp(1.2rem,2vw,1.6rem)] font-medium leading-[1.4] tracking-[-0.015em] text-vino">
-              {product.summary.split("\n").filter(Boolean).map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
+            <div className="relative border-l-4 border-brand-orange bg-slate-50/70 p-8 md:p-10 rounded-r-2xl shadow-sm">
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-4">
+                Sobre la travesía
+              </p>
+              
+              <div className="space-y-6 text-base md:text-lg font-medium text-brand-slate-700 leading-relaxed text-justify">
+                {product.summary.split("\n").filter(Boolean).map((paragraph, index) => {
+                  // Si es el primer párrafo, le aplicamos el efecto de Letra Capital
+                  if (index === 0) {
+                    const firstLetter = paragraph.charAt(0);
+                    const restOfText = paragraph.slice(1);
+                    return (
+                      <p key={index} className="first-letter:float-left first-letter:text-5xl first-letter:font-black first-letter:text-brand-orange first-letter:mr-3 first-letter:leading-none">
+                        {firstLetter}{restOfText}
+                      </p>
+                    );
+                  }
+                  return <p key={index}>{paragraph}</p>;
+                })}
+              </div>
             </div>
           </Reveal>
 
-          {hasWhyOrSpecial && (
-            <div className={`grid gap-10 ${product.why && product.special ? "md:grid-cols-2" : ""}`}>
+          {/* Porque elegirlo */}
+          {(product.why || product.special) && (
+            <div className="grid sm:grid-cols-2 gap-12 border-t border-brand-slate-200 pt-16">
               {product.why && (
                 <Reveal>
-                  <h2 className="text-2xl font-bold tracking-tight text-vino">
-                    {dict.experiencePage.whyTitle} <em className="font-normal text-rosa">{dict.experiencePage.whyTitleEm}</em>?
-                  </h2>
-                  <p className="mt-4 leading-relaxed text-vino/70">{product.why}</p>
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange mb-4">
+                    {dict.experiencePage.whyTitle} {dict.experiencePage.whyTitleEm}?
+                  </h3>
+                  <p className="text-brand-slate-600 leading-relaxed text-justify">{product.why}</p>
                 </Reveal>
               )}
               {product.special && (
                 <Reveal delay={100}>
-                  <h2 className="text-2xl font-bold tracking-tight text-vino">
-                    {dict.experiencePage.specialTitle} <em className="font-normal text-rosa">{dict.experiencePage.specialTitleEm}</em>?
-                  </h2>
-                  <p className="mt-4 leading-relaxed text-vino/70">{product.special}</p>
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-brand-sky mb-4">
+                    {dict.experiencePage.specialTitle} {dict.experiencePage.specialTitleEm}?
+                  </h3>
+                  <p className="text-brand-slate-600 leading-relaxed text-justify">{product.special}</p>
                 </Reveal>
               )}
             </div>
           )}
 
-          {hasIncludesOrExcludes && (
-            <Reveal>
-              <div className={`grid overflow-hidden rounded-[2rem] bg-white ${product.includes && product.excludes ? "md:grid-cols-2" : ""}`}>
-                {product.includes && product.includes.length > 0 && (
-                  <div className="p-8">
-                    <p className="eyebrow text-rosa">{dict.experiencePage.includes}</p>
-                    <ul className="mt-5 space-y-3">
+          {/* Qué Incluye / No Incluye */}
+          {(product.includes?.length || product.excludes?.length) && (
+            <Reveal className="border border-brand-slate-200 bg-slate-50 p-8 md:p-12 shadow-sm">
+              <div className="grid md:grid-cols-2 gap-12">
+                {product.includes && (
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-slate-900 mb-6 border-b border-brand-slate-200 pb-2">Incluye</h3>
+                    <ul className="space-y-4">
                       {product.includes.map((item) => (
-                        <li key={item} className="flex gap-3 text-[0.95rem] leading-snug text-vino">
-                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-lima">
-                            <Check className="h-3 w-3" strokeWidth={3} />
-                          </span>
-                          {item}
+                        <li key={item} className="flex gap-4 text-brand-slate-700 text-sm">
+                          <Check className="h-5 w-5 text-brand-sky shrink-0" />
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
-                {product.excludes && product.excludes.length > 0 && (
-                  <div className="border-t border-dashed border-vino/15 bg-blush-200/50 p-8 md:border-l md:border-t-0">
-                    <p className="eyebrow text-vino/60">{dict.experiencePage.excludes}</p>
-                    <ul className="mt-5 space-y-3">
+                {product.excludes && (
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-slate-900 mb-6 border-b border-brand-slate-200 pb-2">No Incluye</h3>
+                    <ul className="space-y-4">
                       {product.excludes.map((item) => (
-                        <li key={item} className="flex gap-3 text-[0.95rem] leading-snug text-vino/70">
-                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-vino/10">
-                            <X className="h-3 w-3" strokeWidth={3} />
-                          </span>
-                          {item}
+                        <li key={item} className="flex gap-4 text-brand-slate-500 text-sm">
+                          <X className="h-5 w-5 text-slate-300 shrink-0" />
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -130,64 +132,32 @@ export function ExperienceView({ product: rawProduct, related }: { product: Prod
               </div>
             </Reveal>
           )}
-
-          {hasInfoOrTips && (
-            <div className={`grid gap-10 ${product.info && product.tips ? "md:grid-cols-2" : ""}`}>
-              {product.info && product.info.length > 0 && (
-                <Reveal>
-                  <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-vino">
-                    <Info className="h-5 w-5 text-rosa" /> {dict.experiencePage.importantInfo}
-                  </h2>
-                  <ul className="mt-4 space-y-2.5">
-                    {product.info.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm leading-relaxed text-vino/70">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rosa" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </Reveal>
-              )}
-              {product.tips && (
-                <Reveal delay={100}>
-                  <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-vino">
-                    <Lightbulb className="h-5 w-5 text-rosa" /> {dict.experiencePage.recommendations}
-                  </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-vino/70">{product.tips}</p>
-                </Reveal>
-              )}
-            </div>
-          )}
         </div>
 
-        <aside className="lg:col-span-5 xl:col-span-4">
-          <div className="lg:sticky lg:top-28">
+        {/* Sidebar Sticky (Widget de Reserva) */}
+        <aside className="relative">
+          {/* top-32 asegura que no choque con el header de navegación al hacer scroll */}
+          <div className="sticky top-32">
             <BookingWidget product={product} />
           </div>
         </aside>
       </section>
 
-      {/* Related */}
+      {/* 4. Módulo de Experiencias Relacionadas */}
       {related.length > 0 && (
-        <section className="bg-blush-200/60 py-20 md:py-28">
-          <div className="container">
-            <Reveal className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-              <div>
-                <p className="eyebrow text-rosa">{dict.experiencePage.nextTripEyebrow}</p>
-                <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.04em] text-vino md:text-5xl">
-                  {dict.experiencePage.alsoIn} <em className="font-normal text-rosa">{categoryLabel}</em>
-                </h2>
-              </div>
-              <Link
-                href={`/catalogo?categoria=${encodeURIComponent(product.category)}`}
-                className="font-semibold text-vino underline decoration-rosa decoration-2 underline-offset-[6px] hover:text-rosa"
-              >
-                {dict.experiencePage.viewFullSection}
+        <section className="bg-brand-slate-900 py-24">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-brand-slate-800 pb-6">
+              <h2 className="text-3xl font-black text-white tracking-tighter">
+                Otras Experiencias <span className="text-brand-sky">Relacionadas</span>
+              </h2>
+              <Link href="/catalogo" className="text-xs font-bold uppercase tracking-widest text-brand-orange hover:text-white transition-colors">
+                Ver Catálogo Completo
               </Link>
-            </Reveal>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            </div>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {related.map((p, i) => (
-                <Reveal key={p.slug} delay={i * 80} className="h-full">
+                <Reveal key={p.slug} delay={i * 100}>
                   <TicketCard product={p} index={i} />
                 </Reveal>
               ))}
@@ -195,34 +165,6 @@ export function ExperienceView({ product: rawProduct, related }: { product: Prod
           </div>
         </section>
       )}
-
-      {/* CTA */}
-      <section className="container py-24 text-center md:py-32">
-        <Reveal>
-          <p className="eyebrow text-rosa">{dict.experiencePage.ctaEyebrow}</p>
-          <h2 className="mx-auto mt-5 max-w-3xl text-[clamp(2.4rem,6vw,5.5rem)] font-extrabold leading-[0.92] tracking-[-0.05em] text-vino">
-            {dict.experiencePage.ctaTitle} <em className="font-normal text-rosa">{dict.experiencePage.ctaTitleEm}</em>?
-          </h2>
-          <Link
-            href="/contacto"
-            className="group mt-10 inline-flex h-14 items-center gap-3 rounded-full bg-rosa pl-7 pr-2 font-semibold text-blush hover:bg-vino"
-          >
-            {dict.experiencePage.startTrip}
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-blush/15 transition-transform duration-300 group-hover:rotate-45">
-              <ArrowUpRight className="h-5 w-5" />
-            </span>
-          </Link>
-        </Reveal>
-      </section>
-    </>
-  );
-}
-
-function Pill({ icon, children }: { icon?: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-blush/95 px-3.5 py-2 text-xs font-semibold text-vino backdrop-blur">
-      {icon && <span className="text-rosa">{icon}</span>}
-      {children}
-    </span>
+    </div>
   );
 }

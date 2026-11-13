@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, Check, MessageCircle, Minus, Plus } from "lucide-react";
+import { ArrowRight, CalendarDays, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { formatDateLong, isoDate, useCart } from "@/lib/cart";
 import { formatMXN, type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
@@ -17,36 +16,18 @@ export function BookingWidget({ product }: { product: Product }) {
   const { add, setOpen } = useCart();
   const [minDate, setMinDate] = useState("");
   const [date, setDate] = useState("");
-  const [adults, setAdults] = useState(1);  const [error, setError] = useState<string | null>(null);
-  const [added, setAdded] = useState(false);
+  const [adults, setAdults] = useState(1);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMinDate(isoDate(2));
-  }, []);
+  useEffect(() => setMinDate(isoDate(2)), []);
 
   const total = product.price * adults;
 
   const validate = () => {
-    if (!date) {
-      setError(dict.bookingWidget.tourDateRequired);
-      return false;
-    }
-    if (minDate && date < minDate) {
-      setError(dict.bookingWidget.tour48hNotice);
-      return false;
-    }
+    if (!date) { setError(dict.bookingWidget.tourDateRequired); return false; }
+    if (minDate && date < minDate) { setError(dict.bookingWidget.tour48hNotice); return false; }
     setError(null);
     return true;
-  };
-
-  const handleAdd = () => {
-    if (!validate()) return;
-    add(product.slug, date, adults);
-    setAdded(true);
-    toast.success(dict.bookingWidget.addedToastTitle, {
-      description: `${product.short} · ${formatDateLong(date, lang)} · ${adults} ${adults === 1 ? dict.checkoutView.adultSingular : dict.checkoutView.adultPlural}`,
-      action: { label: dict.cart.viewCart, onClick: () => setOpen(true) },
-    });
   };
 
   const handleBuyNow = () => {
@@ -56,142 +37,86 @@ export function BookingWidget({ product }: { product: Product }) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="ticket overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_60px_-35px_rgba(34,8,26,0.5)] [--notch-y:118px]">
-        {/* Header */}
-        <div className="h-[118px] bg-vino px-6 py-5 text-blush">
-          <div className="flex items-center justify-between">
-            <p className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-lima">{dict.bookingWidget.boardingPass}</p>
-            <p className="font-mono text-[0.58rem] tracking-[0.2em] text-blush/50">{product.code}</p>
-          </div>
-          <p className="mt-3 font-mono text-[0.58rem] uppercase tracking-[0.18em] text-blush/50">{dict.bookingWidget.fromPerAdult}</p>
-          <p className="text-3xl font-extrabold tracking-tight">{formatMXN(product.price)}</p>
-        </div>
-
-        <div className="space-y-5 px-6 pb-6 pt-6">
-          {/* Date */}
-          <div>
-            <label htmlFor="tour-date" className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-vino/60">
-              {dict.bookingWidget.tourDateLabel}
-            </label>
-            <div className="relative mt-2">
-              <CalendarDays className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-rosa" />
-              <input
-                id="tour-date"
-                type="date"
-                value={date}
-                min={minDate || undefined}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                  setAdded(false);
-                  if (error) setError(null);
-                }}
-                aria-invalid={!!error}
-                className={cn(
-                  "h-12 w-full rounded-2xl border-[1.5px] bg-blush/60 pl-11 pr-4 text-[0.95rem] text-vino focus:border-rosa focus:outline-none focus:ring-4 focus:ring-rosa/15",
-                  error ? "border-destructive" : "border-vino/15",
-                )}
-              />
-            </div>
-            {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
-          </div>
-
-          {/* Adults */}
-          <div>
-            <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-vino/60">{dict.bookingWidget.adultsLabel}</p>
-            <div className="mt-2 flex items-center justify-between rounded-2xl border-[1.5px] border-vino/15 bg-blush/60 p-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setAdults((a) => Math.max(1, a - 1)); // Forzar mínimo a 1
-                  setAdded(false);
-                }}
-                disabled={adults <= 1} 
-                className="grid h-9 w-9 place-items-center rounded-xl bg-white text-vino transition-colors hover:bg-vino hover:text-blush disabled:opacity-30"
-                aria-label="Quitar adulto"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="font-mono text-lg font-semibold text-vino" aria-live="polite">
-                {adults}
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setAdults((a) => Math.min(20, a + 1));
-                  setAdded(false);
-                }}
-                className="grid h-9 w-9 place-items-center rounded-xl bg-white text-vino transition-colors hover:bg-vino hover:text-blush"
-                aria-label="Agregar adulto"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="text-vino/15">
-            <div className="perforation" />
-          </div>
-
-          <div className="flex items-baseline justify-between">
-            <span className="text-sm text-vino/60">
-              {adults} × {formatMXN(product.price)}
-            </span>
-            <span className="text-2xl font-extrabold tracking-tight text-vino">{formatMXN(total)}</span>
-          </div>
-
-          <div className="grid gap-2">
-            <Button size="lg" onClick={handleAdd} variant={added ? "lima" : "default"}>
-              {added ? (
-                <>
-                  <Check /> {dict.bookingWidget.addedToCart}
-                </>
-              ) : (
-                dict.bookingWidget.addToItinerary
-              )}
-            </Button>
-            {added ? (
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/carrito">
-                  {dict.bookingWidget.viewCart} <ArrowRight />
-                </Link>
-              </Button>
-            ) : (
-              <Button size="lg" variant="dark" onClick={handleBuyNow}>
-                {dict.bookingWidget.bookAndPay} <ArrowRight />
-              </Button>
-            )}
-          </div>
-          <div className="barcode h-10 w-full text-vino/80" aria-hidden="true" />
-        </div>
+    <div className="bg-white border border-brand-slate-200 shadow-xl flex flex-col">
+      <div className="bg-brand-slate-900 p-6 text-white border-t-4 border-brand-orange">
+        <p className="text-xs font-bold uppercase tracking-widest text-brand-sky mb-2">Reservar Experiencia</p>
+        <p className="text-3xl font-black tracking-tighter">{formatMXN(product.price)}</p>
+        <p className="text-[0.65rem] text-slate-400 uppercase tracking-widest mt-1">Por Viajero</p>
       </div>
 
-      <Link
-        href="/contacto"
-        className="flex items-center justify-between rounded-2xl border-[1.5px] border-vino/10 bg-white/60 px-5 py-4 text-vino transition-colors hover:border-rosa hover:text-rosa"
-      >
-        <span className="flex items-center gap-3 font-semibold">
-          <MessageCircle className="h-5 w-5 text-rosa" /> {dict.bookingWidget.questionsTalk}
-        </span>
-        <ArrowRight className="h-4 w-4" />
-      </Link>
+      <div className="p-6 space-y-6">
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-widest text-brand-slate-500 mb-2">
+            Fecha de Salida
+          </label>
+          <div className="relative">
+            <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-slate-400" />
+            <input
+              type="date"
+              value={date}
+              min={minDate || undefined}
+              onChange={(e) => { setDate(e.target.value); setError(null); }}
+              className={cn(
+                "w-full bg-slate-50 border px-10 py-3 text-brand-slate-900 font-medium focus:outline-none focus:border-brand-sky transition-colors",
+                error ? "border-red-500" : "border-brand-slate-200"
+              )}
+            />
+          </div>
+          {error && <p className="mt-2 text-xs text-red-500 font-medium">{error}</p>}
+        </div>
 
-      <div className="rounded-2xl bg-white/60 p-5">
-        <p className="eyebrow text-vino/55">{dict.bookingWidget.practicalData}</p>
-        <dl className="mt-4 divide-y divide-vino/10 text-sm">
-          {[
-            [dict.bookingWidget.categoryLabel, product.category],
-            [dict.bookingWidget.fromLabel, formatMXN(product.price)],
-            [dict.bookingWidget.formatLabel, dict.bookingWidget.formatValue],
-            [dict.bookingWidget.durationLabel, product.duration],
-            [dict.bookingWidget.departureLabel, product.departure],
-          ].map(([k, v]) => (
-            <div key={k} className="flex justify-between gap-4 py-2.5">
-              <dt className="text-vino/55">{k}</dt>
-              <dd className="text-right font-semibold text-vino">{v}</dd>
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-widest text-brand-slate-500 mb-2">
+            Viajeros
+          </label>
+          <div className="flex items-center justify-between border border-brand-slate-200 bg-slate-50 p-1">
+            <button
+              type="button"
+              onClick={() => setAdults((a) => Math.max(1, a - 1))}
+              disabled={adults <= 1}
+              className="h-10 w-10 flex items-center justify-center bg-white border border-brand-slate-200 text-brand-slate-900 hover:bg-brand-slate-900 hover:text-white transition-colors disabled:opacity-50"
+            >
+              <Minus className="h-4 w-4" />
+            </button>
+            <span className="font-mono text-lg font-bold text-brand-slate-900">{adults}</span>
+            <button
+              type="button"
+              onClick={() => setAdults((a) => Math.min(20, a + 1))}
+              className="h-10 w-10 flex items-center justify-center bg-white border border-brand-slate-200 text-brand-slate-900 hover:bg-brand-slate-900 hover:text-white transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="border-t border-brand-slate-200 pt-6 flex justify-between items-end">
+          <span className="text-sm font-medium text-brand-slate-500">Total a Pagar</span>
+          <span className="text-2xl font-black text-brand-slate-900">{formatMXN(total)}</span>
+        </div>
+
+        <button
+          onClick={handleBuyNow}
+          className="w-full bg-brand-orange text-white py-4 text-sm font-bold uppercase tracking-widest hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
+        >
+          {dict.bookingWidget.bookAndPay} <ArrowRight className="h-4 w-4" />
+        </button>
+
+        <div className="pt-6 border-t border-brand-slate-100">
+          <dl className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <dt className="text-brand-slate-500">Categoría</dt>
+              <dd className="font-bold text-brand-slate-900">{product.category}</dd>
             </div>
-          ))}
-        </dl>
+            <div className="flex justify-between">
+              <dt className="text-brand-slate-500">Duración</dt>
+              <dd className="font-bold text-brand-slate-900">{product.duration}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-brand-slate-500">Formato</dt>
+              <dd className="font-bold text-brand-slate-900">{dict.bookingWidget.formatValue}</dd>
+            </div>
+          </dl>
+        </div>
       </div>
     </div>
   );

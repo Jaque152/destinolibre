@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Check, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -166,7 +166,12 @@ export function CheckoutView() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lang,
-          items: lines.map((l) => ({ slug: l.slug, date: l.date, adults: l.adults })),
+          items: lines.map((l) => ({ 
+            slug: l.slug, 
+            date: l.date, 
+            adults: l.adults,
+            unitPrice: l.product.price
+          })),
           coupon,
           customer: {
             firstName: form.firstName,
@@ -201,163 +206,51 @@ export function CheckoutView() {
   if (order) return <Confirmation order={order} />;
 
   return (
-    <section className="container pb-24 pt-32 md:pt-40">
-      <Steps current={hydrated && lines.length > 0 ? 2 : 1} />
-
-      <div className="mt-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <h1 className="text-[clamp(2.8rem,7vw,6rem)] font-extrabold leading-[0.88] tracking-[-0.055em] text-vino">
-          {dict.checkoutView.title} <em className="font-normal text-rosa">{dict.checkoutView.titleEm}</em>
-        </h1>
-        <Link
-          href="/carrito"
-          className="inline-flex items-center gap-2 font-semibold text-vino underline decoration-rosa decoration-2 underline-offset-[6px] hover:text-rosa"
-        >
-          <ArrowLeft className="h-4 w-4" /> {dict.checkoutView.backToCart}
-        </Link>
-      </div>
-
-      {!hydrated ? (
-        <div className="mt-12 h-96 animate-pulse rounded-[2rem] bg-white/60" />
-      ) : lines.length === 0 ? (
-        <div className="mt-12 rounded-[2.5rem] bg-white p-10 text-center md:p-16">
-          <h2 className="text-3xl font-bold tracking-tight text-vino">
-            {dict.checkoutView.emptyTitle} <em className="font-normal text-rosa">{dict.checkoutView.emptyTitleEm}</em>
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-vino/60">{dict.checkoutView.emptyText}</p>
-          <Button asChild size="lg" className="mt-6">
-            <Link href="/catalogo">{dict.common.exploreCatalog}</Link>
-          </Button>
+    <div className="min-h-screen bg-slate-50 text-slate-900 pb-32 pt-36 md:pt-48">
+      <div className="container relative z-10">
+        
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange font-mono text-xs uppercase tracking-widest mb-3">
+              <ShieldCheck className="w-3.5 h-3.5" /> Transacción 100% Cifrada
+            </div>
+            <h1 className="text-[clamp(3rem,7vw,6rem)] font-extrabold leading-[0.88] tracking-[-0.05em] text-slate-900">
+              {dict.checkoutView.title} <em className="font-serif italic font-normal text-brand-orange">{dict.checkoutView.titleEm}</em>
+            </h1>
+          </div>
+          <Link
+            href="/carrito"
+            className="inline-flex items-center gap-2 font-semibold text-slate-600 underline decoration-brand-orange decoration-2 underline-offset-[6px] hover:text-brand-orange transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" /> {dict.checkoutView.backToCart}
+          </Link>
         </div>
-      ) : (
-        <form onSubmit={onSubmit} noValidate className="mt-12 grid gap-10 lg:grid-cols-12">
-          <div className="space-y-8 lg:col-span-7 xl:col-span-8">
-            {/* Contact */}
-            <Block n="01" title={dict.checkoutView.contactBlockTitle} subtitle={dict.checkoutView.contactBlockSub}>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <Field id="firstName" label={dict.checkoutView.firstName} error={errors.firstName}>
-                  <Input
-                    id="f-firstName"
-                    autoComplete="given-name"
-                    value={form.firstName}
-                    onChange={(e) => set("firstName", e.target.value)}
-                    aria-invalid={!!errors.firstName}
-                    placeholder="Frida"
-                  />
-                </Field>
-                <Field id="lastName" label={dict.checkoutView.lastName} error={errors.lastName}>
-                  <Input
-                    id="f-lastName"
-                    autoComplete="family-name"
-                    value={form.lastName}
-                    onChange={(e) => set("lastName", e.target.value)}
-                    aria-invalid={!!errors.lastName}
-                    placeholder="Kahlo Calderón"
-                  />
-                </Field>
-                <Field id="email" label={dict.checkoutView.email} error={errors.email}>
-                  <Input
-                    id="f-email"
-                    type="email"
-                    autoComplete="email"
-                    value={form.email}
-                    onChange={(e) => set("email", e.target.value)}
-                    aria-invalid={!!errors.email}
-                    placeholder="tu@correo.com"
-                  />
-                </Field>
-                <Field id="phone" label={dict.checkoutView.phone} error={errors.phone}>
-                  <Input
-                    id="f-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={form.phone}
-                    onChange={(e) => set("phone", e.target.value.replace(/[^\d\s+()-]/g, ""))}
-                    aria-invalid={!!errors.phone}
-                    placeholder="55 1234 5678"
-                  />
-                </Field>
-                <Field id="notes" label={dict.checkoutView.notes} className="sm:col-span-2">
-                  <Textarea
-                    id="f-notes"
-                    value={form.notes}
-                    onChange={(e) => set("notes", e.target.value)}
-                    placeholder={dict.checkoutView.notesPlaceholder}
-                    className="min-h-[96px]"
-                  />
-                </Field>
-              </div>
-            </Block>
 
-            {/* Invoice */}
-            <Block n="02" title={dict.checkoutView.invoiceBlockTitle} subtitle={dict.checkoutView.invoiceBlockSub}>
-              <div className="mt-6 grid animate-rise gap-5 sm:grid-cols-2">
-                <Field id="rfc" label={dict.checkoutView.rfc} error={errors.rfc}>
-                  <Input
-                    id="f-rfc"
-                    value={form.rfc}
-                    onChange={(e) => set("rfc", e.target.value.toUpperCase().slice(0, 13))}
-                    aria-invalid={!!errors.rfc}
-                    placeholder="XAXX010101000"
-                    className="font-mono uppercase tracking-wider"
-                  />
-                </Field>
-                <Field id="cp" label={dict.checkoutView.cp} error={errors.cp}>
-                  <Input
-                    id="f-cp"
-                    inputMode="numeric"
-                    value={form.cp}
-                    onChange={(e) => set("cp", e.target.value.replace(/\D/g, "").slice(0, 5))}
-                    aria-invalid={!!errors.cp}
-                    placeholder="06700"
-                  />
-                </Field>
-                <Field id="pais" label={dict.checkoutView.country} error={errors.pais} className="sm:col-span-2">
-                  <Input
-                    id="f-pais"
-                    value={form.pais}
-                    onChange={(e) => set("pais", e.target.value)}
-                    aria-invalid={!!errors.pais}
-                    placeholder="País de residencia"
-                  />
-                </Field>
-                <Field id="direccion" label={dict.checkoutView.address} className="sm:col-span-2">
-                  <Input
-                    id="f-direccion"
-                    value={form.direccion}
-                    onChange={(e) => set("direccion", e.target.value)}
-                    aria-invalid={!!errors.direccion}
-                    placeholder="Calle, número, colonia"
-                  />
-                </Field>
-                <Field id="ciudad" label={dict.checkoutView.city} error={errors.ciudad} className="sm:col-span-2">
-                  <Input
-                    id="f-ciudad"
-                    value={form.ciudad}
-                    onChange={(e) => set("ciudad", e.target.value)}
-                    aria-invalid={!!errors.ciudad}
-                    placeholder="Ciudad de residencia"
-                  />
-                </Field>
-              </div>
-            </Block>
+        <div className="mb-12">
+          <Steps current={hydrated && lines.length > 0 ? 2 : 1} />
+        </div>
 
-            {/* Payment */}
-            {/* Payment */}
-            <Block n="03" title={dict.checkoutView.paymentBlockTitle} subtitle={dict.checkoutView.paymentBlockSub}>
-              {form.method === "card" && (
-                <div className="mt-6 space-y-6">
-                  {/* Etomin Secure Payment Banner */}
-                  <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-blush/60 p-4 border border-vino/10">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs uppercase tracking-wider text-vino/60">Pago seguro con</span>
-                      <img src="/etomin_logo.svg" alt="Etomin" className="h-6 w-auto object-contain" />
-                    </div>
-                    <div>
-                      <img src="/etomin_secbadge.svg" alt="Secure Payment Badge" className="h-7 w-auto object-contain" />
-                    </div>
-                  </div>
-
-                  <div className="grid animate-rise gap-6 md:grid-cols-[1fr_260px]">
+        {!hydrated ? (
+          <div className="mt-12 h-96 animate-pulse rounded-[2.5rem] bg-white border border-slate-200" />
+        ) : lines.length === 0 ? (
+          <div className="mt-12 rounded-[2.5rem] bg-white p-12 text-center border border-slate-200 shadow-sm md:p-16">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              {dict.checkoutView.emptyTitle} <em className="font-serif italic text-brand-orange">{dict.checkoutView.emptyTitleEm}</em>
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-slate-600">{dict.checkoutView.emptyText}</p>
+            <Button asChild size="lg" className="mt-6 rounded-full px-8 bg-brand-orange text-white hover:bg-brand-orange-600 shadow-md">
+              <Link href="/catalogo">{dict.common.exploreCatalog}</Link>
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={onSubmit} noValidate className="grid gap-10 lg:grid-cols-12 lg:items-start">
+            
+            {/* Formulario Izquierda */}
+            <div className="space-y-8 lg:col-span-7 xl:col-span-8">
+              
+              <Block n="01" title={dict.checkoutView.paymentBlockTitle} subtitle={dict.checkoutView.paymentBlockSub}>
+                {form.method === "card" && (
+                  <div className="mt-6 grid gap-6 md:grid-cols-[1fr_260px]">
                     <div className="grid gap-5 sm:grid-cols-2">
                       <Field id="cardNumber" label={dict.checkoutView.cardNumber} error={errors.cardNumber} className="sm:col-span-2">
                         <div className="relative">
@@ -369,10 +262,10 @@ export function CheckoutView() {
                             onChange={(e) => set("cardNumber", formatCard(e.target.value))}
                             aria-invalid={!!errors.cardNumber}
                             placeholder="4242 4242 4242 4242"
-                            className="pr-28 font-mono tracking-wider"
+                            className="h-14 rounded-2xl bg-slate-50 border-slate-200 pr-28 font-mono tracking-wider text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
                           />
                           {brand && (
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-vino px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-lima">
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl bg-brand-sky/20 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-brand-sky-600 font-bold shadow-sm">
                               {brand}
                             </span>
                           )}
@@ -386,7 +279,7 @@ export function CheckoutView() {
                           onChange={(e) => set("cardName", e.target.value)}
                           aria-invalid={!!errors.cardName}
                           placeholder="FRIDA KAHLO"
-                          className="uppercase"
+                          className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 uppercase placeholder:text-slate-400 focus:border-brand-orange"
                         />
                       </Field>
                       <Field id="cardExp" label={dict.checkoutView.cardExp} error={errors.cardExp}>
@@ -398,7 +291,7 @@ export function CheckoutView() {
                           onChange={(e) => set("cardExp", formatExp(e.target.value))}
                           aria-invalid={!!errors.cardExp}
                           placeholder="MM/AA"
-                          className="font-mono"
+                          className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-mono text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
                         />
                       </Field>
                       <Field id="cardCvc" label={dict.checkoutView.cardCvc} error={errors.cardCvc}>
@@ -410,110 +303,227 @@ export function CheckoutView() {
                           onChange={(e) => set("cardCvc", e.target.value.replace(/\D/g, "").slice(0, 4))}
                           aria-invalid={!!errors.cardCvc}
                           placeholder="123"
-                          className="font-mono"
+                          className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-mono text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
                         />
                       </Field>
                     </div>
                     <CardPreview number={form.cardNumber} name={form.cardName} exp={form.cardExp} brand={brand} />
                   </div>
-                </div>
-              )}
-            </Block>
+                )}
+              </Block>
 
-            <div id="f-acceptTerms" className="rounded-2xl bg-white/60 p-5">
-              <label className="flex cursor-pointer items-start gap-3">
-                <Checkbox
-                  checked={form.acceptTerms}
-                  onCheckedChange={(v) => set("acceptTerms", v === true)}
-                  aria-invalid={!!errors.acceptTerms}
-                  className="mt-0.5"
-                />
-                <span className="text-sm leading-relaxed text-vino/80">
-                  {dict.checkoutView.termsAgreementPrefix}{" "}
-                  <Link href="/legal/terminos" className="font-semibold text-vino underline decoration-rosa underline-offset-4">
-                    {dict.checkoutView.terms}
-                  </Link>
-                  {dict.checkoutView.termsAnd}{" "}
-                  <Link href="/legal/reembolsos" className="font-semibold text-vino underline decoration-rosa underline-offset-4">
-                    {dict.checkoutView.refunds}
-                  </Link>{" "}
-                  {dict.checkoutView.termsAnd2}{" "}
-                  <Link href="/legal/privacidad" className="font-semibold text-vino underline decoration-rosa underline-offset-4">
-                    {dict.checkoutView.privacy}
-                  </Link>
-                  .
-                </span>
-              </label>
-              {errors.acceptTerms && <p className="mt-2 pl-8 text-sm text-destructive">{errors.acceptTerms}</p>}
-            </div>
-          </div>
+              <Block n="02" title={dict.checkoutView.contactBlockTitle} subtitle={dict.checkoutView.contactBlockSub}>
+                <div className="grid gap-5 sm:grid-cols-2 mt-6">
+                  <Field id="email" label={dict.checkoutView.email} error={errors.email} className="sm:col-span-2">
+                    <Input
+                      id="f-email"
+                      type="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={(e) => set("email", e.target.value)}
+                      aria-invalid={!!errors.email}
+                      placeholder="tu@correo.com"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="firstName" label={dict.checkoutView.firstName} error={errors.firstName}>
+                    <Input
+                      id="f-firstName"
+                      autoComplete="given-name"
+                      value={form.firstName}
+                      onChange={(e) => set("firstName", e.target.value)}
+                      aria-invalid={!!errors.firstName}
+                      placeholder="Frida"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="lastName" label={dict.checkoutView.lastName} error={errors.lastName}>
+                    <Input
+                      id="f-lastName"
+                      autoComplete="family-name"
+                      value={form.lastName}
+                      onChange={(e) => set("lastName", e.target.value)}
+                      aria-invalid={!!errors.lastName}
+                      placeholder="Kahlo Calderón"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="phone" label={dict.checkoutView.phone} error={errors.phone} className="sm:col-span-2">
+                    <Input
+                      id="f-phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={form.phone}
+                      onChange={(e) => set("phone", e.target.value.replace(/[^\d\s+()-]/g, ""))}
+                      aria-invalid={!!errors.phone}
+                      placeholder="55 1234 5678"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="notes" label={dict.checkoutView.notes} className="sm:col-span-2">
+                    <Textarea
+                      id="f-notes"
+                      value={form.notes}
+                      onChange={(e) => set("notes", e.target.value)}
+                      placeholder={dict.checkoutView.notesPlaceholder}
+                      className="min-h-[96px] rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange p-4"
+                    />
+                  </Field>
+                </div>
+              </Block>
 
-          {/* Summary */}
-          <aside className="lg:col-span-5 xl:col-span-4">
-            <div className="lg:sticky lg:top-28">
-              <div className="overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_60px_-35px_rgba(34,8,26,0.5)]">
-                <div className="bg-vino px-6 py-5 text-blush">
-                  <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-lima">{dict.checkoutView.summaryTitle}</p>
-                  <p className="mt-1 text-sm text-blush/60">
-                    {lines.length} {lines.length === 1 ? dict.cart.experience : dict.cart.experiences}
-                  </p>
+              <Block n="03" title={dict.checkoutView.invoiceBlockTitle} subtitle={dict.checkoutView.invoiceBlockSub}>
+                <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                  <Field id="rfc" label={dict.checkoutView.rfc} error={errors.rfc}>
+                    <Input
+                      id="f-rfc"
+                      value={form.rfc}
+                      onChange={(e) => set("rfc", e.target.value.toUpperCase().slice(0, 13))}
+                      aria-invalid={!!errors.rfc}
+                      placeholder="XAXX010101000"
+                      className="h-14 rounded-2xl bg-slate-50 font-mono uppercase tracking-wider border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="cp" label={dict.checkoutView.cp} error={errors.cp}>
+                    <Input
+                      id="f-cp"
+                      inputMode="numeric"
+                      value={form.cp}
+                      onChange={(e) => set("cp", e.target.value.replace(/\D/g, "").slice(0, 5))}
+                      aria-invalid={!!errors.cp}
+                      placeholder="06700"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-mono text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="pais" label={dict.checkoutView.country} error={errors.pais} className="sm:col-span-2">
+                    <Input
+                      id="f-pais"
+                      value={form.pais}
+                      onChange={(e) => set("pais", e.target.value)}
+                      aria-invalid={!!errors.pais}
+                      placeholder="País de residencia"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="direccion" label={dict.checkoutView.address} className="sm:col-span-2">
+                    <Input
+                      id="f-direccion"
+                      value={form.direccion}
+                      onChange={(e) => set("direccion", e.target.value)}
+                      aria-invalid={!!errors.direccion}
+                      placeholder="Calle, número, colonia"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
+                  <Field id="ciudad" label={dict.checkoutView.city} error={errors.ciudad} className="sm:col-span-2">
+                    <Input
+                      id="f-ciudad"
+                      value={form.ciudad}
+                      onChange={(e) => set("ciudad", e.target.value)}
+                      aria-invalid={!!errors.ciudad}
+                      placeholder="Ciudad de residencia"
+                      className="h-14 rounded-2xl bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-brand-orange"
+                    />
+                  </Field>
                 </div>
-                <ul className="max-h-80 divide-y divide-vino/10 overflow-y-auto px-6">
-                  {lines.map((l) => (
-                    <li key={l.id} className="flex gap-3 py-4">
-                      <div className="arch-soft h-16 w-12 shrink-0 overflow-hidden">
-                        
-                        <img src={l.product.image} alt="" className="h-full w-full object-cover" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-vino">{l.product.short}</p>
-                        <p className="mt-0.5 font-mono text-[0.58rem] uppercase tracking-[0.14em] text-vino/50">
-                          {formatDateLong(l.date, lang)} · {l.adults} {l.adults === 1 ? dict.checkoutView.adultSingular : dict.checkoutView.adultPlural}
-                        </p>
-                      </div>
-                      <p className="text-sm font-bold text-vino">{formatMXN(l.lineTotal)}</p>
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-t border-dashed border-vino/15 px-6 py-5">
-                  <dl className="space-y-2 text-sm">
-                    <div className="flex justify-between text-vino/65">
-                      <dt>{dict.cart.subtotal}</dt>
-                      <dd>{formatMXN(subtotal)}</dd>
-                    </div>
-                    {discount > 0 && (
-                      <div className="flex justify-between text-rosa">
-                        <dt>{dict.cart.discount} {coupon && <span className="font-mono text-xs">({coupon})</span>}</dt>
-                        <dd>−{formatMXN(discount)}</dd>
-                      </div>
-                    )}
-                    <div className="flex items-baseline justify-between pt-2">
-                      <dt className="font-semibold text-vino">{dict.cart.total}</dt>
-                      <dd className="text-3xl font-extrabold tracking-tight text-vino">{formatMXN(total)}</dd>
-                    </div>
-                    <p className="text-right font-mono text-[0.58rem] uppercase tracking-[0.18em] text-vino/45">{dict.cart.taxIncluded}</p>
-                  </dl>
-                  <Button type="submit" size="lg" className="mt-5 w-full" disabled={submitting}>
-                    {submitting ? (
-                      <>
-                        <Loader2 className="animate-spin" /> {dict.checkoutView.processing}
-                      </>
-                    ) : (
-                      <>
-                        <Lock /> {dict.checkoutView.payTotal} {formatMXN(total)}
-                      </>
-                    )}
-                  </Button>
-                  <p className="mt-3 text-center text-xs text-vino/50">
-                    {dict.checkoutView.testCardNote}
-                  </p>
-                </div>
+              </Block>
+
+              <div id="f-acceptTerms" className="rounded-[2rem] bg-white p-6 border border-slate-200 shadow-sm">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <Checkbox
+                    checked={form.acceptTerms}
+                    onCheckedChange={(v) => set("acceptTerms", v === true)}
+                    aria-invalid={!!errors.acceptTerms}
+                    className="mt-1 rounded-md border-slate-300 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange"
+                  />
+                  <span className="text-sm leading-relaxed text-slate-700">
+                    {dict.checkoutView.termsAgreementPrefix}{" "}
+                    <Link href="/legal/terminos" className="font-semibold text-slate-900 underline decoration-brand-orange underline-offset-4 hover:text-brand-orange">
+                      {dict.checkoutView.terms}
+                    </Link>
+                    {dict.checkoutView.termsAnd}{" "}
+                    <Link href="/legal/reembolsos" className="font-semibold text-slate-900 underline decoration-brand-orange underline-offset-4 hover:text-brand-orange">
+                      {dict.checkoutView.refunds}
+                    </Link>{" "}
+                    {dict.checkoutView.termsAnd2}{" "}
+                    <Link href="/legal/privacidad" className="font-semibold text-slate-900 underline decoration-brand-orange underline-offset-4 hover:text-brand-orange">
+                      {dict.checkoutView.privacy}
+                    </Link>
+                    .
+                  </span>
+                </label>
+                {errors.acceptTerms && <p className="mt-2 pl-7 text-xs text-destructive">{errors.acceptTerms}</p>}
               </div>
             </div>
-          </aside>
-        </form>
-      )}
-    </section>
+
+            {/* Resumen Derecha */}
+            <aside className="lg:col-span-5 xl:col-span-4">
+              <div className="lg:sticky lg:top-28">
+                <div className="overflow-hidden rounded-[2.5rem] bg-white border border-slate-200 shadow-xl">
+                  <div className="bg-brand-slate-900 px-8 py-6 text-white">
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] font-bold text-brand-sky">{dict.checkoutView.summaryTitle}</p>
+                    <p className="mt-1 text-sm text-slate-300">
+                      {lines.length} {lines.length === 1 ? dict.cart.experience : dict.cart.experiences}
+                    </p>
+                  </div>
+                  <ul className="max-h-72 divide-y divide-slate-100 overflow-y-auto px-8">
+                    {lines.map((l) => (
+                      <li key={l.id} className="flex gap-4 py-4">
+                        <div className="h-16 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={l.product.image} alt="" className="h-full w-full object-cover" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold text-slate-900">{l.product.short}</p>
+                          <p className="mt-0.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-slate-500">
+                            {formatDateLong(l.date, lang)} · {l.adults} {l.adults === 1 ? dict.checkoutView.adultSingular : dict.checkoutView.adultPlural}
+                          </p>
+                        </div>
+                        <p className="text-sm font-bold text-slate-900 font-mono">{formatMXN(l.lineTotal)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="border-t border-dashed border-slate-200 bg-slate-50 px-8 py-6">
+                    <dl className="space-y-3 text-sm">
+                      <div className="flex justify-between text-slate-600">
+                        <dt>{dict.cart.subtotal}</dt>
+                        <dd className="font-mono">{formatMXN(subtotal)}</dd>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-brand-orange">
+                          <dt>{dict.cart.discount} {coupon && <span className="font-mono text-xs">({coupon})</span>}</dt>
+                          <dd className="font-mono">−{formatMXN(discount)}</dd>
+                        </div>
+                      )}
+                      <div className="flex items-baseline justify-between pt-3 border-t border-slate-200">
+                        <dt className="font-semibold text-slate-900 text-base">{dict.cart.total}</dt>
+                        <dd className="text-3xl font-extrabold tracking-tight text-slate-900 font-mono">{formatMXN(total)}</dd>
+                      </div>
+                      <p className="text-right font-mono text-[0.6rem] uppercase tracking-[0.18em] text-slate-400">{dict.cart.taxIncluded}</p>
+                    </dl>
+                    <Button type="submit" size="lg" className="mt-6 w-full h-14 rounded-full bg-brand-orange text-white hover:bg-brand-orange-600 shadow-lg text-base transition-all duration-300 hover:scale-105" disabled={submitting}>
+                      {submitting ? (
+                        <>
+                          <Loader2 className="animate-spin mr-2" /> {dict.checkoutView.processing}
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="mr-2 h-4 w-4" /> {dict.checkoutView.payTotal} {formatMXN(total)}
+                        </>
+                      )}
+                    </Button>
+                    <p className="mt-4 text-center text-xs text-slate-500">
+                      {dict.checkoutView.testCardNote}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+          </form>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -521,23 +531,23 @@ function Steps({ current }: { current: number }) {
   const { dict } = useLanguage();
   const steps = [dict.checkoutView.step1, dict.checkoutView.step2, dict.checkoutView.step3];
   return (
-    <ol className="flex flex-wrap items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
+    <ol className="flex flex-wrap items-center gap-3 font-mono text-[0.65rem] uppercase tracking-[0.16em]">
       {steps.map((s, i) => {
         const n = i + 1;
         const done = n < current;
         const active = n === current;
         return (
-          <li key={s} className="flex items-center gap-2">
+          <li key={s} className="flex items-center gap-3">
             <span
               className={cn(
-                "flex items-center gap-2 rounded-full px-3 py-1.5",
-                active ? "bg-vino text-blush" : done ? "bg-lima text-vino" : "bg-vino/5 text-vino/45",
+                "flex items-center gap-2 rounded-full px-4 py-2 font-semibold shadow-sm transition-all",
+                active ? "bg-brand-slate-900 text-white shadow-md" : done ? "bg-brand-orange text-white font-bold" : "bg-slate-200 text-slate-500 border border-slate-300",
               )}
             >
-              {done ? <Check className="h-3 w-3" strokeWidth={3} /> : <span>0{n}</span>}
+              {done ? <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} /> : <span>0{n}</span>}
               {s}
             </span>
-            {i < steps.length - 1 && <span className="h-px w-6 bg-vino/20" />}
+            {i < steps.length - 1 && <span className="h-px w-8 bg-slate-300" />}
           </li>
         );
       })}
@@ -547,15 +557,15 @@ function Steps({ current }: { current: number }) {
 
 function Block({ n, title, subtitle, children }: { n: string; title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <fieldset className="rounded-[2rem] bg-white p-6 md:p-8">
+    <fieldset className="rounded-[2.5rem] bg-white p-8 border border-slate-200 shadow-sm md:p-10">
       <legend className="sr-only">{title}</legend>
-      <div className="mb-6 flex items-start gap-4">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-rosa font-mono text-xs font-semibold text-blush">
+      <div className="mb-6 flex items-start gap-4 border-b border-slate-100 pb-6">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-orange font-mono text-sm font-bold text-white shadow-md">
           {n}
         </span>
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-vino">{title}</h2>
-          {subtitle && <p className="mt-0.5 text-sm text-vino/55">{subtitle}</p>}
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h2>
+          {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
         </div>
       </div>
       {children}
@@ -578,9 +588,9 @@ function Field({
 }) {
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor={`f-${id}`}>{label}</Label>
+      <Label htmlFor={`f-${id}`} className="font-mono text-xs uppercase tracking-wider text-slate-600">{label}</Label>
       {children}
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }
@@ -589,19 +599,19 @@ function CardPreview({ number, name, exp, brand }: { number: string; name: strin
   const masked = (number || "•••• •••• •••• ••••").padEnd(19, "•");
   return (
     <div
-      className="relative hidden aspect-[1.6/1] w-full overflow-hidden rounded-2xl p-5 text-blush shadow-[0_24px_50px_-20px_rgba(230,0,126,0.6)] md:block"
-      style={{ background: "linear-gradient(135deg, #E6007E 0%, #9E0057 55%, #22081A 100%)" }}
+      className="relative hidden aspect-[1.6/1] w-full overflow-hidden rounded-2xl p-6 text-white shadow-xl md:flex md:flex-col justify-between border border-brand-slate-800"
+      style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E293B 70%, #EA580C 100%)" }}
       aria-hidden="true"
     >
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-lima/30 blur-2xl" />
-      <div className="relative flex h-full flex-col">
-        <div className="flex items-center justify-between">
-          <div className="h-7 w-10 rounded-md bg-gradient-to-br from-lima to-lima-600" />
-          <span className="font-mono text-[0.6rem] uppercase tracking-widest">{brand ?? "Card"}</span>
-        </div>
-        <p className="mt-auto font-mono text-[0.95rem] tracking-[0.12em]">{masked}</p>
-        <div className="mt-3 flex justify-between font-mono text-[0.55rem] uppercase tracking-widest text-blush/80">
-          <span className="truncate pr-2">{name || "Name Surname"}</span>
+      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-sky/20 blur-2xl" />
+      <div className="flex items-center justify-between relative z-10">
+        <div className="h-8 w-12 rounded-lg bg-gradient-to-br from-brand-sky to-brand-sky-600 shadow-inner" />
+        <span className="font-mono text-xs uppercase tracking-widest font-bold text-brand-sky">{brand ?? "Card"}</span>
+      </div>
+      <div className="relative z-10">
+        <p className="font-mono text-xl tracking-[0.15em] text-white">{masked}</p>
+        <div className="mt-4 flex justify-between font-mono text-xs uppercase tracking-widest text-slate-300">
+          <span className="truncate pr-2 font-semibold">{name || "Name Surname"}</span>
           <span>{exp || "MM/YY"}</span>
         </div>
       </div>

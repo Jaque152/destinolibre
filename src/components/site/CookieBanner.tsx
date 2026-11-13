@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Cookie } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-const KEY = "destinara.cookies.v1";
+const KEY = "DestinoLibre.cookies.v1";
 
 export function CookieBanner() {
   const { dict } = useLanguage();
